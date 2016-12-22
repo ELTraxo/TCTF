@@ -118,4 +118,22 @@ BOOL Memory::ReadDouble(uintptr_t pAddress, double * pReadBuff)
 	return ReadProcessMemory(hProcess, (void*)pAddress, pReadBuff, sizeof(double), nullptr);
 }
 
+BOOL Memory::WriteInt(uintptr_t pAddress, int * pWriteBuff)
+{
+	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(int), nullptr);
+}
 
+BOOL Memory::WriteInt64(uintptr_t pAddress, int64_t * pWriteBuff)
+{
+	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(int64_t), nullptr);
+}
+
+BOOL Memory::WriteFloat(uintptr_t pAddress, float * pWriteBuff)
+{
+	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(float), nullptr);
+}
+
+BOOL Memory::WriteDouble(uintptr_t pAddress, double * pWriteBuff)
+{
+	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(double), nullptr);
+}

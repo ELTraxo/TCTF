@@ -18,6 +18,11 @@ public:
 	BOOL ReadFloat(uintptr_t pAddress, float * pReadBuff);
 	BOOL ReadDouble(uintptr_t pAddress, double * pReadBuff);
 
+	BOOL WriteInt(uintptr_t pAddress, int * pWriteBuff);
+	BOOL WriteInt64(uintptr_t pAddress, int64_t * pWriteBuff);
+	BOOL WriteFloat(uintptr_t pAddress, float * pWriteBuff);
+	BOOL WriteDouble(uintptr_t pAddress, double * pWriteBuff);
+
 private:
 	wchar_t * wcsGameName = nullptr;
 	HANDLE hProcess = nullptr;
