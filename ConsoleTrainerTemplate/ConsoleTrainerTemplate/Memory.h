@@ -13,10 +13,19 @@ public:
 	bool OpenProc();
 	
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
-	BOOL ReadInt(uintptr_t pAddress, int * pReadBuff);
-	BOOL ReadInt64(uintptr_t pAddress, int64_t * pReadBuff);
-	BOOL ReadFloat(uintptr_t pAddress, float * pReadBuff);
-	BOOL ReadDouble(uintptr_t pAddress, double * pReadBuff);
+	
+	class Read
+	{
+	public:
+		Read(Memory & mem);
+		BOOL ReadInt(uintptr_t pAddress, int * pReadBuff);
+		BOOL ReadInt64(uintptr_t pAddress, int64_t * pReadBuff);
+		BOOL ReadFloat(uintptr_t pAddress, float * pReadBuff);
+		BOOL ReadDouble(uintptr_t pAddress, double * pReadBuff);
+
+	private:
+		Memory & mem;
+	}read;
 
 	BOOL WriteInt(uintptr_t pAddress, int * pWriteBuff);
 	BOOL WriteInt64(uintptr_t pAddress, int64_t * pWriteBuff);

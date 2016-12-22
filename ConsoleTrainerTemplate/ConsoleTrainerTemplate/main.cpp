@@ -9,7 +9,7 @@ int main()
 
 	uintptr_t pHealth = mem.EvaluatePointer((uintptr_t)0x0050FC84, new UINT[2]{ 0, 0x27C }, 2);
 	int64_t health = 0;
-	if (mem.ReadInt64(pHealth, &health))
+	if (mem.read.ReadInt64(pHealth, &health))
 	{
 		printf("Health: %I64d\n", health);
 	}
