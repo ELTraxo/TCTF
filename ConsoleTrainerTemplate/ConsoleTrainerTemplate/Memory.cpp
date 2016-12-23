@@ -163,3 +163,17 @@ BOOL Memory::Write::WriteDouble(uintptr_t pAddress, double & pWriteBuff)
 {
 	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(double), nullptr);
 }
+
+BOOL Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize)
+{
+	if (pByteArray == nullptr)
+	{
+		byte * nops = new byte[szSize];
+		for (int x = 0; x < szSize; x++)
+			nops[x] = 0x90;
+
+		return WriteProcessMemory(mem.hProcess, (void*)pAddress, nops, szSize, nullptr);
+	}
+	else
+		return WriteProcessMemory(mem.hProcess, (void*)pAddress, pByteArray, szSize, nullptr);
+}

@@ -35,6 +35,7 @@ public:
 		BOOL WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff);
 		BOOL WriteFloat(uintptr_t pAddress, float & pWriteBuff);
 		BOOL WriteDouble(uintptr_t pAddress, double & pWriteBuff);
+		BOOL WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize);
 	private: 
 		Memory & mem;
 	}write;

@@ -8,9 +8,10 @@ int main()
 	puts("Found Game!");
 
 	byte bArray[3];
-
-	mem.read.ReadBytes((uintptr_t)0x00429D1F, bArray, 3);
-
+	uintptr_t pHealthCode = (uintptr_t)0x00429D1F;
+	mem.read.ReadBytes(pHealthCode, bArray, 3);
+	mem.write.WriteBytes(pHealthCode, nullptr, 3);
+	mem.write.WriteBytes(pHealthCode, bArray, 3);
 	int pHealth;
 	mem.read.ReadInt((uintptr_t)0x0C3EAEAC, pHealth);
 
