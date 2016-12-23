@@ -142,10 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Hack.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="Memory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Hack.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memory.cpp" />
   </ItemGroup>

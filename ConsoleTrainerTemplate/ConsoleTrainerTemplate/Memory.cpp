@@ -169,7 +169,7 @@ BOOL Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szS
 	if (pByteArray == nullptr)
 	{
 		byte * nops = new byte[szSize];
-		for (int x = 0; x < szSize; x++)
+		for (UINT x = 0; x < szSize; x++)
 			nops[x] = 0x90;
 
 		return WriteProcessMemory(mem.hProcess, (void*)pAddress, nops, szSize, nullptr);
