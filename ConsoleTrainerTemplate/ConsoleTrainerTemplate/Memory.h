@@ -18,19 +18,27 @@ public:
 	{
 	public:
 		Read(Memory & mem);
-		BOOL ReadInt(uintptr_t pAddress, int * pReadBuff);
-		BOOL ReadInt64(uintptr_t pAddress, int64_t * pReadBuff);
-		BOOL ReadFloat(uintptr_t pAddress, float * pReadBuff);
-		BOOL ReadDouble(uintptr_t pAddress, double * pReadBuff);
-
+		BOOL ReadInt(uintptr_t pAddress, int & pReadBuff);
+		BOOL ReadInt64(uintptr_t pAddress, int64_t & pReadBuff);
+		BOOL ReadFloat(uintptr_t pAddress, float & pReadBuff);
+		BOOL ReadDouble(uintptr_t pAddress, double & pReadBuff);
+		BOOL ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize);
 	private:
 		Memory & mem;
 	}read;
 
-	BOOL WriteInt(uintptr_t pAddress, int * pWriteBuff);
-	BOOL WriteInt64(uintptr_t pAddress, int64_t * pWriteBuff);
-	BOOL WriteFloat(uintptr_t pAddress, float * pWriteBuff);
-	BOOL WriteDouble(uintptr_t pAddress, double * pWriteBuff);
+	class Write
+	{
+	public:
+		Write(Memory & mem);
+		BOOL WriteInt(uintptr_t pAddress, int & pWriteBuff);
+		BOOL WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff);
+		BOOL WriteFloat(uintptr_t pAddress, float & pWriteBuff);
+		BOOL WriteDouble(uintptr_t pAddress, double & pWriteBuff);
+	private: 
+		Memory & mem;
+	}write;
+	
 
 private:
 	wchar_t * wcsGameName = nullptr;

@@ -2,14 +2,16 @@
 
 Memory::Memory()
 	:
-	read(*this)
+	read(*this),
+	write(*this)
 {
 }
 
 //Blocking constructor...
 Memory::Memory(wchar_t * GameName)
 	:
-	read(*this)
+	read(*this),
+	write(*this)
 {
 	this->wcsGameName = GameName;
 	Init();
@@ -90,10 +92,13 @@ uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)
 
 	if (ReadProcessMemory(hProcess, (void*)pBase, &evAddress, sizeof(uintptr_t), nullptr))
 	{
-		for (UCHAR x = 0; x < count - 1; x++)
+		if (count > 1)
 		{
-			if (!ReadProcessMemory(hProcess, (void*)(evAddress + offsets[x]), &evAddress, sizeof(uintptr_t), nullptr))
-				return 0;
+			for (UCHAR x = 0; x < count - 1; x++)
+			{
+				if (!ReadProcessMemory(hProcess, (void*)(evAddress + offsets[x]), &evAddress, sizeof(uintptr_t), nullptr))
+					return 0;
+			}
 		}
 	}
 	else
@@ -102,49 +107,59 @@ uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)
 	return (evAddress + offsets[count - 1]);
 }
 
-
 Memory::Read::Read(Memory & mem)
 	:
 	mem(mem)
 {
 }
 
-BOOL Memory::Read::ReadInt(uintptr_t pAddress, int * pReadBuff)
+BOOL Memory::Read::ReadInt(uintptr_t pAddress, int & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, sizeof(int), nullptr);
+	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(int), nullptr);
 }
 
-BOOL Memory::Read::ReadInt64(uintptr_t pAddress, int64_t * pReadBuff)
+BOOL Memory::Read::ReadInt64(uintptr_t pAddress, int64_t & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, sizeof(int64_t), nullptr);
+	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(int64_t), nullptr);
 }
 
-BOOL Memory::Read::ReadFloat(uintptr_t pAddress, float * pReadBuff)
+BOOL Memory::Read::ReadFloat(uintptr_t pAddress, float & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, sizeof(float), nullptr);
+	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(float), nullptr);
 }
 
-BOOL Memory::Read::ReadDouble(uintptr_t pAddress, double * pReadBuff)
+BOOL Memory::Read::ReadDouble(uintptr_t pAddress, double & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, sizeof(double), nullptr);
+	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(double), nullptr);
 }
 
-BOOL Memory::WriteInt(uintptr_t pAddress, int * pWriteBuff)
+BOOL Memory::Read::ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize)
 {
-	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(int), nullptr);
+	return ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, szSize, nullptr);
 }
 
-BOOL Memory::WriteInt64(uintptr_t pAddress, int64_t * pWriteBuff)
-{
-	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(int64_t), nullptr);
+Memory::Write::Write(Memory & mem)
+	:
+	mem(mem)
+{	
 }
 
-BOOL Memory::WriteFloat(uintptr_t pAddress, float * pWriteBuff)
+BOOL Memory::Write::WriteInt(uintptr_t pAddress, int & pWriteBuff)
 {
-	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(float), nullptr);
+	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int), nullptr);
+}
+		
+BOOL Memory::Write::WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff)
+{
+	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int64_t), nullptr);
+}
+			
+BOOL Memory::Write::WriteFloat(uintptr_t pAddress, float & pWriteBuff)
+{
+	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(float), nullptr);
 }
 
-BOOL Memory::WriteDouble(uintptr_t pAddress, double * pWriteBuff)
+BOOL Memory::Write::WriteDouble(uintptr_t pAddress, double & pWriteBuff)
 {
-	return WriteProcessMemory(hProcess, (void*)pAddress, pWriteBuff, sizeof(double), nullptr);
+	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(double), nullptr);
 }

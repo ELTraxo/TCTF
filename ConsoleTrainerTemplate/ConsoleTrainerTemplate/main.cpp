@@ -7,16 +7,13 @@ int main()
 	mem.Init(L"ac_client.exe");
 	puts("Found Game!");
 
-	uintptr_t pHealth = mem.EvaluatePointer((uintptr_t)0x0050FC84, new UINT[2]{ 0, 0x27C }, 2);
-	int64_t health = 0;
-	if (mem.read.ReadInt64(pHealth, &health))
-	{
-		printf("Health: %I64d\n", health);
-	}
-	else
-	{
-		printf("Failure...\n");
-	}
+	byte bArray[3];
+
+	mem.read.ReadBytes((uintptr_t)0x00429D1F, bArray, 3);
+
+	int pHealth;
+	mem.read.ReadInt((uintptr_t)0x0C3EAEAC, pHealth);
+
 	system("pause");
 	return 0;
 }
