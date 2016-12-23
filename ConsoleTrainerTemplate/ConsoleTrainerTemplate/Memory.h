@@ -1,5 +1,15 @@
 #pragma once
 #include <TlHelp32.h>
+#include <vector>
+
+struct FreezerSp
+{
+	uintptr_t pAddress;
+	int iValue;
+	int64_t i64Value;
+	float fValue;
+	double dValue;
+};
 
 class Memory
 {
@@ -40,6 +50,7 @@ public:
 		Memory & mem;
 	}write;
 	
+
 
 private:
 	wchar_t * wcsGameName = nullptr;
