@@ -19,8 +19,10 @@ public:
 	~Memory();
 	void Init();
 	void Init(wchar_t * GameName);
-	void GetProcID();
+	bool GetProcID();
+	bool GetProcID(DWORD & pID, const wchar_t & GameName);
 	bool OpenProc();
+	bool CheckProcDeath();
 	
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
 	
@@ -28,11 +30,11 @@ public:
 	{
 	public:
 		Read(Memory & mem);
-		BOOL ReadInt(uintptr_t pAddress, int & pReadBuff);
-		BOOL ReadInt64(uintptr_t pAddress, int64_t & pReadBuff);
-		BOOL ReadFloat(uintptr_t pAddress, float & pReadBuff);
-		BOOL ReadDouble(uintptr_t pAddress, double & pReadBuff);
-		BOOL ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize);
+		bool ReadInt(uintptr_t pAddress, int & pReadBuff);
+		bool ReadInt64(uintptr_t pAddress, int64_t & pReadBuff);
+		bool ReadFloat(uintptr_t pAddress, float & pReadBuff);
+		bool ReadDouble(uintptr_t pAddress, double & pReadBuff);
+		bool ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize);
 	private:
 		Memory & mem;
 	}read;
@@ -41,11 +43,11 @@ public:
 	{
 	public:
 		Write(Memory & mem);
-		BOOL WriteInt(uintptr_t pAddress, int & pWriteBuff);
-		BOOL WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff);
-		BOOL WriteFloat(uintptr_t pAddress, float & pWriteBuff);
-		BOOL WriteDouble(uintptr_t pAddress, double & pWriteBuff);
-		BOOL WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize);
+		bool WriteInt(uintptr_t pAddress, int & pWriteBuff);
+		bool WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff);
+		bool WriteFloat(uintptr_t pAddress, float & pWriteBuff);
+		bool WriteDouble(uintptr_t pAddress, double & pWriteBuff);
+		bool WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize);
 	private: 
 		Memory & mem;
 	}write;
@@ -65,5 +67,6 @@ private:
 	wchar_t * wcsGameName = nullptr;
 	HANDLE hProcess = nullptr;
 	DWORD pID = NULL;
+	bool ProcDied = false;
 };
 

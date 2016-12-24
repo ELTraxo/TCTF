@@ -47,7 +47,15 @@ void Memory::Init(wchar_t * GameName)
 	Init();
 }
 
-void Memory::GetProcID()
+bool Memory::GetProcID()
+{
+	if (GetProcID(this->pID, *this->wcsGameName))
+		return true;
+	else
+		return false;
+}
+
+bool Memory::GetProcID(DWORD & pID, const wchar_t & GameName)
 {
 	PROCESSENTRY32 pe;
 	pe.dwSize = sizeof(PROCESSENTRY32);
@@ -55,22 +63,23 @@ void Memory::GetProcID()
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (Process32First(hSnap, &pe))
 	{
-		if (!wcscmp(pe.szExeFile, wcsGameName))
+		if (!wcscmp(pe.szExeFile, &GameName))
 		{
-			this->pID = pe.th32ProcessID;
+			pID = pe.th32ProcessID;
 		}
 		else
 		{
 			while (Process32Next(hSnap, &pe))
 			{
-				if (!wcscmp(pe.szExeFile, wcsGameName))
+				if (!wcscmp(pe.szExeFile, &GameName))
 				{
-					this->pID = pe.th32ProcessID;
-					break;
+					pID = pe.th32ProcessID;
+					return true;
 				}
 			}
 		}
 	}
+	return false;
 }
 
 bool Memory::OpenProc()
@@ -83,6 +92,19 @@ bool Memory::OpenProc()
 	{
 		hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pID);
 		if (!hProcess)
+			return false;
+	}
+	return true;
+}
+
+bool Memory::CheckProcDeath()
+{
+	DWORD pid = 0;
+	if (GetProcID(pid, *wcsGameName))
+	{
+		if (pid != pID)
+			return true;
+		else
 			return false;
 	}
 	return true;
@@ -115,29 +137,59 @@ Memory::Read::Read(Memory & mem)
 {
 }
 
-BOOL Memory::Read::ReadInt(uintptr_t pAddress, int & pReadBuff)
+bool Memory::Read::ReadInt(uintptr_t pAddress, int & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(int), nullptr);
+	if (ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(int), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
-BOOL Memory::Read::ReadInt64(uintptr_t pAddress, int64_t & pReadBuff)
+bool Memory::Read::ReadInt64(uintptr_t pAddress, int64_t & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(int64_t), nullptr);
+	if (ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(int64_t), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
-BOOL Memory::Read::ReadFloat(uintptr_t pAddress, float & pReadBuff)
+bool Memory::Read::ReadFloat(uintptr_t pAddress, float & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(float), nullptr);
+	if (ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(float), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
-BOOL Memory::Read::ReadDouble(uintptr_t pAddress, double & pReadBuff)
+bool Memory::Read::ReadDouble(uintptr_t pAddress, double & pReadBuff)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(double), nullptr);
+	if (ReadProcessMemory(mem.hProcess, (void*)pAddress, &pReadBuff, sizeof(double), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
-BOOL Memory::Read::ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize)
+bool Memory::Read::ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize)
 {
-	return ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, szSize, nullptr);
+	if (ReadProcessMemory(mem.hProcess, (void*)pAddress, pReadBuff, szSize, nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
 Memory::Write::Write(Memory & mem)
@@ -146,27 +198,51 @@ Memory::Write::Write(Memory & mem)
 {	
 }
 
-BOOL Memory::Write::WriteInt(uintptr_t pAddress, int & pWriteBuff)
+bool Memory::Write::WriteInt(uintptr_t pAddress, int & pWriteBuff)
 {
-	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int), nullptr);
+	if (WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
-		
-BOOL Memory::Write::WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff)
+	
+bool Memory::Write::WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff)
 {
-	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int64_t), nullptr);
-}
-			
-BOOL Memory::Write::WriteFloat(uintptr_t pAddress, float & pWriteBuff)
-{
-	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(float), nullptr);
+	if (WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int64_t), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
-BOOL Memory::Write::WriteDouble(uintptr_t pAddress, double & pWriteBuff)
+bool Memory::Write::WriteFloat(uintptr_t pAddress, float & pWriteBuff)
 {
-	return WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(double), nullptr);
+	if (WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(float), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
 }
 
-BOOL Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize)
+bool Memory::Write::WriteDouble(uintptr_t pAddress, double & pWriteBuff)
+{
+	if (WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(double), nullptr))
+		return true;
+	else
+	{
+		mem.ProcDied = mem.CheckProcDeath();
+		return false;
+	}
+}
+
+bool Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize)
 {
 	if (pByteArray == nullptr)
 	{
@@ -174,10 +250,24 @@ BOOL Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szS
 		for (UINT x = 0; x < szSize; x++)
 			nops[x] = 0x90;
 
-		return WriteProcessMemory(mem.hProcess, (void*)pAddress, nops, szSize, nullptr);
+		if (WriteProcessMemory(mem.hProcess, (void*)pAddress, nops, szSize, nullptr))
+			return true;
+		else
+		{
+			mem.ProcDied = mem.CheckProcDeath();
+			return false;
+		}
 	}
 	else
-		return WriteProcessMemory(mem.hProcess, (void*)pAddress, pByteArray, szSize, nullptr);
+	{
+		if (WriteProcessMemory(mem.hProcess, (void*)pAddress, pByteArray, szSize, nullptr))
+			return true;
+		else
+		{
+			mem.ProcDied = mem.CheckProcDeath();
+			return false;
+		}
+	}
 }
 
 Memory::Pattern::Pattern(Memory & mem)
