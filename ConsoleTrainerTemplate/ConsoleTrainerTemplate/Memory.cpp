@@ -34,6 +34,9 @@ void Memory::Init()
 		{
 			std::cerr << "ERROR: Could not open process." << std::endl;
 		}
+
+		std::thread tr(&FreezeThread, *this);
+		tr.detach();
 	}
 	else
 	{
@@ -108,6 +111,16 @@ bool Memory::CheckProcDeath()
 			return false;
 	}
 	return true;
+}
+
+bool Memory::GetProcDeathVar()
+{
+	return ProcDied;
+}
+
+void Memory::AddHackToVec(Hack & hack)
+{
+	//GHackVec.push_back(hack);
 }
 
 uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)
@@ -333,3 +346,5 @@ uintptr_t Memory::Pattern::Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char
 	if (!bFound) return uintptr_t(0);
 	return uintptr_t(uiBegin + patternOffset);
 }
+
+

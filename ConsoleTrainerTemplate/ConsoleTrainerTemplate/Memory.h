@@ -1,17 +1,14 @@
 #pragma once
-#include <TlHelp32.h>
-#include <vector>
 
-struct FreezerSp
+
+enum ValType
 {
-	uintptr_t pAddress;
-	int iValue;
-	int64_t i64Value;
-	float fValue;
-	double dValue;
+	I, I64, F, D
 };
 
 class Hack;
+
+//std::vector<Hack> GHackVec;
 
 class Memory
 {
@@ -25,6 +22,8 @@ public:
 	bool GetProcID(DWORD & pID, const wchar_t & GameName);
 	bool OpenProc();
 	bool CheckProcDeath();
+	bool GetProcDeathVar();
+	void AddHackToVec(Hack & hack);
 	
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
 	
@@ -70,5 +69,7 @@ private:
 	HANDLE hProcess = nullptr;
 	DWORD pID = NULL;
 	bool ProcDied = false;
+	std::vector<Hack> Hacks;
 };
 
+void FreezeThread(Memory & mem);
