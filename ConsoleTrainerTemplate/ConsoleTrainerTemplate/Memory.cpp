@@ -23,6 +23,7 @@ Memory::~Memory()
 {
 }
 
+// Main init function
 void Memory::Init()
 {
 	if (wcsGameName)
@@ -35,6 +36,7 @@ void Memory::Init()
 			std::cerr << "ERROR: Could not open process." << std::endl;
 		}
 
+		// Freeze values thread
 		std::thread tr(&FreezeThread, *this);
 		tr.detach();
 	}
@@ -116,11 +118,6 @@ bool Memory::CheckProcDeath()
 bool Memory::GetProcDeathVar()
 {
 	return ProcDied;
-}
-
-void Memory::AddHackToVec(Hack & hack)
-{
-	//GHackVec.push_back(hack);
 }
 
 uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)

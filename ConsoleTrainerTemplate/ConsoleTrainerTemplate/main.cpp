@@ -1,6 +1,6 @@
 #include "includes.h"
 
-std::vector<Hack> GHackVec;
+std::vector<std::reference_wrapper<Hack>> GHackVec;
 
 void FreezeThread(Memory & mem)
 {
@@ -38,10 +38,13 @@ int main()
 	//	puts("Didn't find shit!");
 
 	//while (!mem.CheckProcDeath()); // <-- While has not died
+	uintptr_t pBase = (uintptr_t)0x50F4F4;
+	UINT pOffsets[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
 
-	Hack InfAmmo(mem, HackType::VALFREEZE, ValType::I, (uintptr_t)0x00F2A6C8, 169);
+	Hack InfAmmo(mem, GHackVec, HackType::VALFREEZE, ValType::I, pBase, pOffsets, 5, 169);
+	
 	InfAmmo.Toggle();
-	InfAmmo.AddToVec(GHackVec);
+	//InfAmmo.AddHackToVec();
 	while (!mem.CheckProcDeath());
 	system("pause");
 	return 0;

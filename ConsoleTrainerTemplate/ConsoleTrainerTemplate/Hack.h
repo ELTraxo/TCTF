@@ -16,14 +16,14 @@ public: //ctors
 	Hack(Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize); 
 
 	// val freeze ctors
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, int value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, int64_t value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, float value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, double value);
-	Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value);
+	Hack(Memory & mem,std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, int value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, float value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, double value);
+	Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value);
 	~Hack();
 
 public: //Inits
@@ -59,6 +59,8 @@ private:
 	int64_t i64Value = 0;
 	float fValue = 0;
 	double dValue = 0;
+
+	std::vector<std::reference_wrapper<Hack>> & gvHacks;
 	
 };
 

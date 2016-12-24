@@ -3,72 +3,81 @@
 // code patch ctor
 Hack::Hack(Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(std::vector<std::reference_wrapper<Hack>>()) //Don't really need a ref to the global hacks vec
 {
 	InitTypeAndAddress(ht, vt, pAddress);
 	this->szSize = szSize;
 }
 
 // val freeze ctors...
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, int value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, int value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndAddress(ht, vt, pAddress);
 	iValue = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndPointer(ht, vt, pBase, Offsets, count);
 	iValue = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndAddress(ht, vt, pAddress);
 	i64Value = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndPointer(ht, vt, pBase, Offsets, count);
 	i64Value = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, float value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, float value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndAddress(ht, vt, pAddress);
 	fValue = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndPointer(ht, vt, pBase, Offsets, count);
 	fValue = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pAddress, double value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, double value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndAddress(ht, vt, pAddress);
 	dValue = value;
 }
 
-Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
+Hack::Hack(Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
 	:
-	mem(mem)
+	mem(mem),
+	gvHacks(gvHacks)
 {
 	InitTypeAndPointer(ht, vt, pBase, Offsets, count);
 	dValue = value;
@@ -76,8 +85,6 @@ Hack::Hack(Memory & mem, HackType ht, ValType vt, uintptr_t pBase, UINT * Offset
 
 Hack::~Hack()
 {
-	if (pOffsets)
-		delete pOffsets;
 }
 
 void Hack::InitTypeAndAddress(HackType ht, ValType vt, uintptr_t pAddress)
@@ -92,7 +99,7 @@ void Hack::InitTypeAndPointer(HackType ht, ValType vt, uintptr_t pBase, UINT * O
 {
 	this->ht = ht;
 	this->vt = vt;
-	this->pBase;
+	this->pBase = pBase;
 	this->pOffsets = Offsets;
 	this->ucOffsetCount = count;
 	AddHackToVec();
@@ -182,16 +189,16 @@ void Hack::WriteValue()
 
 void Hack::Toggle()
 {
+	bEnabled = !bEnabled;
 	if (ht == HackType::CODEPATCH)
 	{
 		TogglePatch();
 	}
-	bEnabled = !bEnabled;
 }
 
 void Hack::AddHackToVec()
 {
-	mem.AddHackToVec(*this);
+	gvHacks.push_back(*this);
 }
 
 void Hack::AddToVec(std::vector<Hack>& hack)

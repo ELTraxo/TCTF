@@ -8,8 +8,6 @@ enum ValType
 
 class Hack;
 
-//std::vector<Hack> GHackVec;
-
 class Memory
 {
 public:
@@ -23,7 +21,7 @@ public:
 	bool OpenProc();
 	bool CheckProcDeath();
 	bool GetProcDeathVar();
-	void AddHackToVec(Hack & hack);
+
 	
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
 	
