@@ -3,7 +3,8 @@
 Memory::Memory()
 	:
 	read(*this),
-	write(*this)
+	write(*this),
+	pattern(*this)
 {
 }
 
@@ -11,7 +12,8 @@ Memory::Memory()
 Memory::Memory(wchar_t * GameName)
 	:
 	read(*this),
-	write(*this)
+	write(*this),
+	pattern(*this)
 {
 	this->wcsGameName = GameName;
 	Init();
@@ -176,4 +178,68 @@ BOOL Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szS
 	}
 	else
 		return WriteProcessMemory(mem.hProcess, (void*)pAddress, pByteArray, szSize, nullptr);
+}
+
+Memory::Pattern::Pattern(Memory & mem)
+	:
+	mem(mem)
+{
+}
+
+bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset)
+{
+	UINT pLen = strlen(mask);
+	for (UINT x = 0; x < szSize; x++)
+	{
+		bool bFound = true;
+		for (UINT y = 0; y < pLen; y++)
+		{
+			if (mask[y] != '?' && pattern[y] != bArray[x + y])
+			{
+				bFound = false;
+				break;
+			}
+		}
+		if (bFound)
+		{
+			patternOffset = x;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+uintptr_t Memory::Pattern::Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char * pattern, char * mask)
+{
+	UINT patternOffset = 0;
+	char * bArray;
+	bool bFound = false;
+	while (uiBegin < uiEnd)
+	{
+		MEMORY_BASIC_INFORMATION mbi;
+		if (!VirtualQueryEx(mem.hProcess, (void*)uiBegin, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
+			return 0;
+
+		bArray = new char[mbi.RegionSize];
+
+		DWORD dwOldProtection;
+
+		if (mbi.State == MEM_COMMIT && mbi.Protect != PAGE_NOACCESS)
+		{
+			VirtualProtectEx(mem.hProcess, (void*)mbi.BaseAddress, mbi.RegionSize, PAGE_EXECUTE_READWRITE, &dwOldProtection);
+			if (!mem.read.ReadBytes((uintptr_t)mbi.BaseAddress, (byte*)bArray, mbi.RegionSize))
+				std::cerr << "Failed to read memory" << std::endl;
+			VirtualProtectEx(mem.hProcess, (void*)mbi.BaseAddress, mbi.RegionSize, dwOldProtection, nullptr);
+			if (CheckPattern(bArray, pattern, mask, mbi.RegionSize, patternOffset))
+			{
+				bFound = true;
+				break;
+			}
+		}
+		uiBegin += mbi.RegionSize;		
+	}
+	delete[] bArray;
+	if (!bFound) return uintptr_t(0);
+	return uintptr_t(uiBegin + patternOffset);
 }

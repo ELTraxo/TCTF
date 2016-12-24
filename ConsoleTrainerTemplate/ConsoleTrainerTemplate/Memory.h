@@ -1,6 +1,7 @@
 #pragma once
 #include <TlHelp32.h>
 #include <vector>
+#include "patternscan.h"
 
 struct FreezerSp
 {
@@ -50,6 +51,15 @@ public:
 		Memory & mem;
 	}write;
 	
+	class Pattern
+	{
+	public:
+		Pattern(Memory & mem);
+		bool CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset);
+		uintptr_t Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char * pattern, char * mask);
+	private:
+		Memory & mem;
+	}pattern;
 
 
 private:
