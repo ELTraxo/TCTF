@@ -11,16 +11,26 @@ enum HackType
 
 class Hack
 {
-public:
-	Hack(Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize);
+public: //ctors
+	// code patch ctor
+	Hack(Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize); 
+
+	// val freeze ctors
 	Hack(Memory & mem, HackType ht, uintptr_t pAddress, int value);
+	Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, int value);
 	Hack(Memory & mem, HackType ht, uintptr_t pAddress, int64_t value);
+	Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value);
 	Hack(Memory & mem, HackType ht, uintptr_t pAddress, float value);
+	Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, float value);
 	Hack(Memory & mem, HackType ht, uintptr_t pAddress, double value);
+	Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, double value);
 	~Hack();
 
+public: //Inits
 	void InitTypeAndAddress(HackType ht, uintptr_t pAddress);
+	void InitTypeAndPointer(HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count);
 
+public: //Toggles
 	void TogglePatch();
 	void Toggle();
 	
@@ -35,7 +45,8 @@ private:
 	std::vector<byte> vOldBytes;
 
 	//for pointer based hacks.
-	UCHAR cnOffsets = NULL; //amount of offsets
+	uintptr_t pBase = NULL;
+	UCHAR ucOffsetCount = NULL; //amount of offsets
 	UINT * pOffsets = nullptr; //ptr -> offsets
 	bool bEnabled = false;
 

@@ -17,11 +17,27 @@ Hack::Hack(Memory & mem, HackType ht, uintptr_t pAddress, int value)
 	iValue = value;
 }
 
+Hack::Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
+	:
+	mem(mem)
+{
+	InitTypeAndPointer(ht, pBase, Offsets, count);
+	iValue = value;
+}
+
 Hack::Hack(Memory & mem, HackType ht, uintptr_t pAddress, int64_t value)
 	:
 	mem(mem)
 {
 	InitTypeAndAddress(ht, pAddress);
+	i64Value = value;
+}
+
+Hack::Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
+	:
+	mem(mem)
+{
+	InitTypeAndPointer(ht, pBase, Offsets, count);
 	i64Value = value;
 }
 
@@ -33,11 +49,27 @@ Hack::Hack(Memory & mem, HackType ht, uintptr_t pAddress, float value)
 	fValue = value;
 }
 
+Hack::Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
+	:
+	mem(mem)
+{
+	InitTypeAndPointer(ht, pBase, Offsets, count);
+	fValue = value;
+}
+
 Hack::Hack(Memory & mem, HackType ht, uintptr_t pAddress, double value)
 	:
 	mem(mem)
 {
 	InitTypeAndAddress(ht, pAddress);
+	dValue = value;
+}
+
+Hack::Hack(Memory & mem, HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
+	:
+	mem(mem)
+{
+	InitTypeAndPointer(ht, pBase, Offsets, count);
 	dValue = value;
 }
 
@@ -51,6 +83,14 @@ void Hack::InitTypeAndAddress(HackType ht, uintptr_t pAddress)
 {
 	this->ht = ht;
 	this->pAddress = pAddress;
+}
+
+void Hack::InitTypeAndPointer(HackType ht, uintptr_t pBase, UINT * Offsets, UCHAR count)
+{
+	this->ht = ht;
+	this->pBase;
+	this->pOffsets = Offsets;
+	this->ucOffsetCount = count;
 }
 
 void Hack::TogglePatch()

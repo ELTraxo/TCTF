@@ -278,7 +278,7 @@ Memory::Pattern::Pattern(Memory & mem)
 
 bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset)
 {
-	UINT pLen = strlen(mask);
+	SIZE_T pLen = strlen(mask);
 	for (UINT x = 0; x < szSize; x++)
 	{
 		bool bFound = true;

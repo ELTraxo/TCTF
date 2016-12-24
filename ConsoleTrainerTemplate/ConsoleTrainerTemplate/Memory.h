@@ -11,6 +11,8 @@ struct FreezerSp
 	double dValue;
 };
 
+class Hack;
+
 class Memory
 {
 public:
