@@ -1,7 +1,6 @@
 #pragma once
 #include <TlHelp32.h>
 #include <vector>
-#include "patternscan.h"
 
 struct FreezerSp
 {
