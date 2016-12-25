@@ -141,38 +141,6 @@ uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)
 	return (evAddress + offsets[count - 1]);
 }
 
-uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
-{
-	char * pPattern = new char[szSize];
-	char * pMask = new char[szSize];
-	
-	for (WORD x = 0; x < szSize; x++)
-	{
-		pPattern[x] = 0x00;
-		pMask[x] = 'x';
-	}
-	
-	uintptr_t pCodeCave = pattern.Scan(0, 0x7FFFFFFF, pPattern, pMask);
-	
-	if (pCodeCave == uintptr_t(0))
-	{
-		for (WORD x = 0; x < szSize; x++)
-		{
-			pPattern[x] = 0x00;
-			pMask[x] = 'x';
-		}
-		pCodeCave = pattern.Scan(0, 0x7FFFFFFF, pPattern, pMask);
-	}
-	else
-	{
-		return pCodeCave;
-	}
-	delete[] pPattern;
-	delete[] pMask;
-
-	return pCodeCave;
-}
-
 Memory::Read::Read(Memory & mem)
 	:
 	mem(mem)
@@ -318,7 +286,7 @@ Memory::Pattern::Pattern(Memory & mem)
 {
 }
 
-bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset)
+bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave)
 {
 	SIZE_T pLen = strlen(mask);
 	for (UINT x = 0; x < szSize; x++)
@@ -326,10 +294,21 @@ bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, U
 		bool bFound = true;
 		for (UINT y = 0; y < pLen; y++)
 		{
-			if (mask[y] != '?' && pattern[y] != bArray[x + y])
+			if (!bCodeCave) 
 			{
-				bFound = false;
-				break;
+				if (mask[y] != '?' && pattern[y] != bArray[x + y])
+				{
+					bFound = false;
+					break;
+				}
+			}
+			else
+			{
+				if (bArray[x + y] != 0x00 /*|| bArray[x + y] != 0x05 || bArray[x + y] != 0x0D || bArray[x + y] != 0x04 || bArray[x + y] != 0xCC*/)
+				{
+					bFound = false;
+					break;
+				}
 			}
 		}
 		if (bFound)
@@ -342,7 +321,7 @@ bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, U
 	return false;
 }
 
-uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask)
+uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask, bool bCodeCave)
 {
 	UINT patternOffset = 0;
 	char * bArray;
@@ -363,7 +342,7 @@ uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, char * pattern, char *
 			if (!mem.read.ReadBytes((uintptr_t)mbi.BaseAddress, (byte*)bArray, mbi.RegionSize))
 				std::cerr << "Failed to read memory" << std::endl;
 			VirtualProtectEx(mem.hProcess, (void*)mbi.BaseAddress, mbi.RegionSize, dwOldProtection, nullptr);
-			if (CheckPattern(bArray, pattern, mask, mbi.RegionSize, patternOffset))
+			if (CheckPattern(bArray, pattern, mask, mbi.RegionSize, patternOffset, bCodeCave))
 			{
 				bFound = true;
 				break;
@@ -401,17 +380,17 @@ bool Memory::Pattern::GetModule(TCHAR * pModName)
 	return false;
 }
 
-uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask)
+uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave)
 {
 	if (GetModule(pModName))
 	{
-		return Scan((UINT)mem.me32.modBaseAddr, (UINT)(mem.me32.modBaseAddr + mem.me32.modBaseSize), pattern, mask);
+		return Scan((UINT)mem.me32.modBaseAddr, (UINT)(mem.me32.modBaseAddr + mem.me32.modBaseSize), pattern, mask, bCodeCave);
 	}
 	else
 		return uintptr_t(NULL);
 }
 
-uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask)
+uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask, bool bCodeCave)
 {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
 	MODULEENTRY32 modEntry = { 0 };
@@ -421,7 +400,7 @@ uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask)
 		modEntry.dwSize = sizeof(MODULEENTRY32);
 		if (Module32First(hSnapshot, &modEntry))
 		{
-			uintptr_t pAddress = Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask);
+			uintptr_t pAddress = Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
 			if (pAddress != uintptr_t(0))
 			{
 				CloseHandle(hSnapshot);
@@ -431,4 +410,37 @@ uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask)
 	}
 
 	return uintptr_t(0);
+}
+
+uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
+{
+	char * pPattern = new char[szSize];
+	char * pMask = new char[szSize];
+
+	for (WORD x = 0; x < szSize; x++)
+	{
+		pPattern[x] = 0x00;
+		pMask[x] = 'x';
+	}
+
+	uintptr_t pCodeCave = pattern.ScanProcess(pPattern, pMask, true);
+
+	//if (pCodeCave == uintptr_t(0))
+	//{
+	//	for (WORD x = 0; x < szSize; x++)
+	//	{
+	//		pPattern[x] = 0x05;
+	//		pMask[x] = 'x';
+	//	}
+	//	pCodeCave = pattern.Scan(0, 0x7FFFFFFF, pPattern, pMask, true);
+	//}
+	//else
+	//{
+	//	return pCodeCave;
+	//}
+
+	delete[] pPattern;
+	delete[] pMask;
+
+	return pCodeCave;
 }

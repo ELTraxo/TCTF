@@ -55,11 +55,11 @@ public:
 	{
 	public:
 		Pattern(Memory & mem);
-		bool CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset);
-		uintptr_t Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask);
+		bool CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave);
+		uintptr_t Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask, bool bCodeCave);
 		bool GetModule(TCHAR * pModName);
-		uintptr_t ScanModule(TCHAR * pModName, char * pattern, char * mask);
-		uintptr_t ScanProcess(char * pattern, char * mask);
+		uintptr_t ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave);
+		uintptr_t ScanProcess(char * pattern, char * mask, bool bCodeCave);
 
 	private:
 		Memory & mem;
