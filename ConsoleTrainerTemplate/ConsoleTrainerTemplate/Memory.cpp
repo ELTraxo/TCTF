@@ -141,6 +141,38 @@ uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)
 	return (evAddress + offsets[count - 1]);
 }
 
+uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
+{
+	char * pPattern = new char[szSize];
+	char * pMask = new char[szSize];
+	
+	for (WORD x = 0; x < szSize; x++)
+	{
+		pPattern[x] = 0x00;
+		pMask[x] = 'x';
+	}
+	
+	uintptr_t pCodeCave = pattern.Scan(pStart, 0, 0x7FFFFFFF, pPattern, pMask);
+	
+	if (pCodeCave == uintptr_t(0))
+	{
+		for (WORD x = 0; x < szSize; x++)
+		{
+			pPattern[x] = 0x00;
+			pMask[x] = 'x';
+		}
+		pCodeCave = pattern.Scan(pStart, 0, 0x7FFFFFFF, pPattern, pMask);
+	}
+	else
+	{
+		return pCodeCave;
+	}
+	delete[] pPattern;
+	delete[] pMask;
+
+	return pCodeCave;
+}
+
 Memory::Read::Read(Memory & mem)
 	:
 	mem(mem)
@@ -342,6 +374,45 @@ uintptr_t Memory::Pattern::Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char
 	delete[] bArray;
 	if (!bFound) return uintptr_t(0);
 	return uintptr_t(uiBegin + patternOffset);
+}
+
+uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask)
+{
+	if (GetModule(pModName))
+	{
+		return Scan(
+			(uintptr_t)mem.me32.modBaseAddr,
+			(UINT)mem.me32.modBaseAddr,
+			(UINT)(mem.me32.modBaseAddr + mem.me32.modBaseSize),
+			pattern, mask);
+	}
+	else
+		return uintptr_t(NULL);
+}
+
+bool Memory::Pattern::GetModule(TCHAR * pModName)
+{
+	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
+	MODULEENTRY32 modEntry;
+	if (hSnapshot != INVALID_HANDLE_VALUE)
+	{
+		modEntry.dwSize = sizeof(MODULEENTRY32);
+
+		if (Module32First(hSnapshot, &modEntry))
+		{
+			do
+			{
+				if (!_tcscmp(modEntry.szModule, pModName))
+				{
+					mem.me32 = modEntry;
+					CloseHandle(hSnapshot);
+					return true;
+				}
+			} while (Module32Next(hSnapshot, &modEntry));
+		}
+		CloseHandle(hSnapshot);
+	}
+	return false;
 }
 
 

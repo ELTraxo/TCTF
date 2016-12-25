@@ -57,15 +57,20 @@ public:
 		Pattern(Memory & mem);
 		bool CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset);
 		uintptr_t Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char * pattern, char * mask);
+		uintptr_t ScanModule(TCHAR * pModName, char * pattern, char * mask);
+		bool GetModule(TCHAR * pModName);
+
 	private:
 		Memory & mem;
 	}pattern;
-
+	
+	uintptr_t ScanForCodeCave(uintptr_t pStart, UWORD szSize);
 
 private:
 	wchar_t * wcsGameName = nullptr;
 	HANDLE hProcess = nullptr;
 	DWORD pID = NULL;
+	MODULEENTRY32 me32;
 	bool ProcDied = false;
 	std::vector<Hack> Hacks;
 };
