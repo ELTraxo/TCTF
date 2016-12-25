@@ -152,7 +152,7 @@ uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
 		pMask[x] = 'x';
 	}
 	
-	uintptr_t pCodeCave = pattern.Scan(pStart, 0, 0x7FFFFFFF, pPattern, pMask);
+	uintptr_t pCodeCave = pattern.Scan(0, 0x7FFFFFFF, pPattern, pMask);
 	
 	if (pCodeCave == uintptr_t(0))
 	{
@@ -161,7 +161,7 @@ uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
 			pPattern[x] = 0x00;
 			pMask[x] = 'x';
 		}
-		pCodeCave = pattern.Scan(pStart, 0, 0x7FFFFFFF, pPattern, pMask);
+		pCodeCave = pattern.Scan(0, 0x7FFFFFFF, pPattern, pMask);
 	}
 	else
 	{
@@ -342,7 +342,7 @@ bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, U
 	return false;
 }
 
-uintptr_t Memory::Pattern::Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char * pattern, char * mask)
+uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask)
 {
 	UINT patternOffset = 0;
 	char * bArray;
@@ -376,20 +376,6 @@ uintptr_t Memory::Pattern::Scan(uintptr_t pStart, UINT uiBegin, UINT uiEnd, char
 	return uintptr_t(uiBegin + patternOffset);
 }
 
-uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask)
-{
-	if (GetModule(pModName))
-	{
-		return Scan(
-			(uintptr_t)mem.me32.modBaseAddr,
-			(UINT)mem.me32.modBaseAddr,
-			(UINT)(mem.me32.modBaseAddr + mem.me32.modBaseSize),
-			pattern, mask);
-	}
-	else
-		return uintptr_t(NULL);
-}
-
 bool Memory::Pattern::GetModule(TCHAR * pModName)
 {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
@@ -415,4 +401,34 @@ bool Memory::Pattern::GetModule(TCHAR * pModName)
 	return false;
 }
 
+uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask)
+{
+	if (GetModule(pModName))
+	{
+		return Scan((UINT)mem.me32.modBaseAddr, (UINT)(mem.me32.modBaseAddr + mem.me32.modBaseSize), pattern, mask);
+	}
+	else
+		return uintptr_t(NULL);
+}
 
+uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask)
+{
+	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
+	MODULEENTRY32 modEntry = { 0 };
+
+	if (hSnapshot != INVALID_HANDLE_VALUE)
+	{
+		modEntry.dwSize = sizeof(MODULEENTRY32);
+		if (Module32First(hSnapshot, &modEntry))
+		{
+			uintptr_t pAddress = Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask);
+			if (pAddress != uintptr_t(0))
+			{
+				CloseHandle(hSnapshot);
+				return pAddress;
+			}
+		}
+	}
+
+	return uintptr_t(0);
+}
