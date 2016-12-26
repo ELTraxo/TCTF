@@ -148,6 +148,7 @@ void Hack::TogglePatch()
 			poBytes[x] = vOldBytes.at(x);
 		}
 		mem.write.WriteBytes(pAddress, poBytes, szSize);
+		delete[] poBytes;
 	}
 }
 

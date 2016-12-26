@@ -261,9 +261,13 @@ bool Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szS
 			nops[x] = 0x90;
 
 		if (WriteProcessMemory(mem.hProcess, (void*)pAddress, nops, szSize, nullptr))
+		{
+			delete[] nops;
 			return true;
+		}
 		else
 		{
+			delete[] nops;
 			mem.ProcDied = mem.CheckProcDeath();
 			return false;
 		}

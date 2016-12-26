@@ -11,7 +11,6 @@ Trainer::Trainer(TCHAR * GameName)
 	this->GameName = GameName;
 }
 
-
 Trainer::~Trainer()
 {
 }
@@ -48,7 +47,7 @@ void Trainer::Toggle(TCHAR * HackName)
 
 void Trainer::Update()
 {
-	for each(Hack hack in Options)
+	for each(Hack & hack in Options)
 	{
 		if (GetAsyncKeyState(hack.GetHotkey()))
 			hack.Toggle();

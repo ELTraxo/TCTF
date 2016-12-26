@@ -56,9 +56,10 @@ int main()
 	TCHAR * sInfAmmo = L"InfAmmo";
 
 	Hack InfAmmo = tn.MakePatchHack(sInfAmmo, 0x004637E9, 2);
+	InfAmmo.SetHotkey(VK_NUMPAD1);
 	tn.AddOption(InfAmmo);
-	tn.Toggle(sInfAmmo);
-	tn.Toggle(sInfAmmo);
+	while (true)
+		tn.Update();
 	
 	system("pause");
 	return 0;
