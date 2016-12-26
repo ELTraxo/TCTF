@@ -9,6 +9,8 @@ enum HackType
 	HOOK
 };
 
+
+
 class Hack
 {
 public: //ctors
@@ -30,8 +32,9 @@ public: //Inits
 	void InitHackAndAddress(TCHAR * HackName, HackType ht, ValType vt, uintptr_t pAddress);
 	void InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count);
 
-public: //Name
+public: //Getters
 	TCHAR* GetName();
+	HackType GetHackType();
 
 public: //Hotkey
 	void SetHotkey(int vKey);
@@ -69,7 +72,6 @@ private:
 	float fValue = 0;
 	double dValue = 0;
 
-	std::vector<std::reference_wrapper<Hack>> & gvHacks;
-	
+	std::vector<std::reference_wrapper<Hack>> & gvHacks;	
 };
 

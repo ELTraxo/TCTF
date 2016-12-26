@@ -1,7 +1,6 @@
-#include "includes.h"
+#include "Trainer.h"
 
 std::vector<std::reference_wrapper<Hack>> GHackVec;
-
 void FreezeThread(Memory & mem)
 {
 	while (!mem.GetProcDeathVar())
@@ -15,6 +14,7 @@ void FreezeThread(Memory & mem)
 		}
 	}
 }
+
 
 int main()
 {
@@ -49,15 +49,21 @@ int main()
 	//puts("Found pattern.");
 	//uintptr_t pCodeCave = mem.ScanForCodeCave(0, 128);
 
-	Trainer tn; // We could do it like dis
+	Trainer tn(GHackVec); // We could do it like dis
 	puts("Searching for game...");
 	tn.Init(L"ac_client.exe");
-	
-	TCHAR * sInfAmmo = L"InfAmmo";
+	puts("Found Game!");
 
+	TCHAR * sInfAmmo = L"InfAmmo";
 	Hack InfAmmo = tn.MakePatchHack(sInfAmmo, 0x004637E9, 2);
 	InfAmmo.SetHotkey(VK_NUMPAD1);
 	tn.AddOption(InfAmmo);
+	
+	TCHAR * sGodMode = L"GodMode";
+	Hack GodMode = tn.MakeFreezeHack(sGodMode, 0x0291A6C8, 110);
+	GodMode.SetHotkey(VK_NUMPAD2);
+	tn.AddOption(GodMode);
+
 	while (true)
 		tn.Update();
 	

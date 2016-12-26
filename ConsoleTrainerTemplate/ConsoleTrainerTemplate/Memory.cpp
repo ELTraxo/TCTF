@@ -448,3 +448,4 @@ uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
 
 	return pCodeCave;
 }
+

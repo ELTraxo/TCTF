@@ -112,6 +112,11 @@ TCHAR * Hack::GetName()
 	return HackName;
 }
 
+HackType Hack::GetHackType()
+{
+	return this->ht;
+}
+
 void Hack::SetHotkey(int vKey)
 {
 	iHotkey = vKey;

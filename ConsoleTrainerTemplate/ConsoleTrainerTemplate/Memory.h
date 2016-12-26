@@ -6,6 +6,19 @@ enum ValType
 	I, I64, F, D
 };
 
+class Pointer
+{
+public:
+	Pointer(uintptr_t pBase, UINT * pOffsets)
+	{
+		this->pBase = pBase;
+		this->pOffsets = pOffsets;
+	}
+
+	uintptr_t pBase;
+	UINT * pOffsets;
+};
+
 class Hack;
 
 class Memory
