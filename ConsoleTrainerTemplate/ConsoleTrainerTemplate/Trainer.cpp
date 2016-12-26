@@ -1,16 +1,14 @@
 #include "Trainer.h"
 
-
-
 Trainer::Trainer(std::vector<std::reference_wrapper<Hack>> & GHackVec)
 	:
-	GHackVec(GHackVec)
+	pGVHacks(GHackVec)
 {
 }
 
 Trainer::Trainer(TCHAR * GameName, std::vector<std::reference_wrapper<Hack>> & GHackVec)
 	:
-	GHackVec(GHackVec)
+	pGVHacks(GHackVec)
 {
 	this->GameName = GameName;
 }
@@ -45,22 +43,22 @@ Hack Trainer::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 
 Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value)
 {
-	return Hack(HackName, mem, GHackVec, HackType::VALFREEZE, ValType::I, pAddress, value);
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
 Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value)
 {
-	return Hack(HackName, mem, GHackVec, HackType::VALFREEZE, ValType::I, pAddress, value);
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
 Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value)
 {
-	return Hack(HackName, mem, GHackVec, HackType::VALFREEZE, ValType::I, pAddress, value);
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
 Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value)
 {
-	return Hack(HackName, mem, GHackVec, HackType::VALFREEZE, ValType::I, pAddress, value);
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
 void Trainer::Toggle(TCHAR * HackName)

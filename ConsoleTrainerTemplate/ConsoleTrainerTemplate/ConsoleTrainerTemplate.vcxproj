@@ -142,10 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Freeza.h" />
     <ClInclude Include="Hack.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Trainer.h" />
+    <ClInclude Include="Traxo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hack.cpp" />

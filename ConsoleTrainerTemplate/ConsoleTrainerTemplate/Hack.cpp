@@ -4,80 +4,80 @@
 Hack::Hack(TCHAR * GameName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize)
 	:
 	mem(mem),
-	gvHacks(std::vector<std::reference_wrapper<Hack>>()) //Don't really need a ref to the global hacks vec
+	pGVHacks(std::vector<std::reference_wrapper<Hack>>()) //Don't really need a ref to the global hacks vec
 {
 	InitHackAndAddress(GameName, ht, vt, pAddress);
 	this->szSize = szSize;
 }
 
 // val freeze ctors...
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, int value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndAddress(GameName, ht, vt, pAddress);
 	iValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
 	iValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndAddress(GameName, ht, vt, pAddress);
 	i64Value = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
 	i64Value = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, float value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, float value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndAddress(GameName, ht, vt, pAddress);
 	fValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
 	fValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pAddress, double value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, double value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndAddress(GameName, ht, vt, pAddress);
 	dValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & gvHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
+Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
 	:
 	mem(mem),
-	gvHacks(gvHacks)
+	pGVHacks(pGVHacks)
 {
 	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
 	dValue = value;
@@ -220,7 +220,7 @@ void Hack::Toggle()
 
 void Hack::AddHackToVec()
 {
-	gvHacks.push_back(*this);
+	pGVHacks.push_back(*this);
 }
 
 void Hack::AddToVec(std::vector<Hack>& hack)

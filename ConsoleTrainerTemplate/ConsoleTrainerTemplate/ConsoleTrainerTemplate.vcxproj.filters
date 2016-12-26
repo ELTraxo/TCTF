@@ -41,5 +41,11 @@
     <ClInclude Include="Trainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Freeza.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Traxo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

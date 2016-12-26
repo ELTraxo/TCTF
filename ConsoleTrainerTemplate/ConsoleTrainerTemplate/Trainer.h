@@ -3,7 +3,6 @@
 #include <ctime>
 
 
-
 class Trainer
 {
 public:
@@ -24,8 +23,8 @@ public:
 private:
 	Memory mem;
 	std::vector<std::reference_wrapper<Hack>> Options;
-	std::vector<std::reference_wrapper<Hack>> & GHackVec;
+	std::vector<std::reference_wrapper<Hack>> & pGVHacks;
 	TCHAR * GameName;
-	UINT KeyTimer;
+	long KeyTimer;
 };
 
