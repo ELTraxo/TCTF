@@ -39,7 +39,7 @@ int main()
 	puts("Found Game!");
 
 	TCHAR * sInfAmmo = L"InfAmmo";
-	Hack InfAmmo = tn.MakePatchHack(sInfAmmo, 0x004637E9, 2);
+	Hack InfAmmo = tn.make.MakePatchHack(sInfAmmo, 0x004637E9, 2);
 	InfAmmo.SetHotkey(VK_NUMPAD1);
 	tn.AddOption(InfAmmo);
 	
@@ -47,7 +47,7 @@ int main()
 	UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
 	Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
 	//Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
-	Hack God = tn.MakeFreezePtrHack(L"God", pGodMode, 125);
+	Hack God = tn.make.MakeFreezePtrHack(L"God", pGodMode, 125);
 	God.SetHotkey(VK_NUMPAD2);
 	tn.AddOption(God);
 	while (true)

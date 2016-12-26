@@ -2,13 +2,15 @@
 
 Trainer::Trainer(std::vector<std::reference_wrapper<Hack>> & GHackVec)
 	:
-	pGVHacks(GHackVec)
+	pGVHacks(GHackVec),
+	make(this->mem, GHackVec)
 {
 }
 
 Trainer::Trainer(TCHAR * GameName, std::vector<std::reference_wrapper<Hack>> & GHackVec)
 	:
-	pGVHacks(GHackVec)
+	pGVHacks(GHackVec),
+	make(this->mem, GHackVec)
 {
 	this->GameName = GameName;
 }
@@ -36,47 +38,54 @@ void Trainer::AddOption(Hack & hack)
 	//	GHackVec.push_back(hack);
 }
 
-Hack Trainer::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
+Trainer::Make::Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks)
+	:
+	mem(mem),
+	pGVHacks(pGVHacks)
+{
+}
+
+Hack Trainer::Make::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 {
 	return Hack(HackName, mem, HackType::CODEPATCH, (uintptr_t)pAddress, szSize);
 }
 
-Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value)
+Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
-Hack Trainer::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value)
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
-Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value)
+Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
-Hack Trainer::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value)
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
-Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value)
+Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
-Hack Trainer::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value)
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
-Hack Trainer::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value)
+Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
-Hack Trainer::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, double value)
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, double value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
