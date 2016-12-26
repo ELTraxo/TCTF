@@ -43,11 +43,13 @@ int main()
 	InfAmmo.SetHotkey(VK_NUMPAD1);
 	tn.AddOption(InfAmmo);
 	
-	TCHAR * sGodMode = L"GodMode";
-	Hack GodMode = tn.MakeFreezeHack(sGodMode, 0x0291A6C8, 110);
-	GodMode.SetHotkey(VK_NUMPAD2);
-	tn.AddOption(GodMode);
-
+	std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
+	//Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
+	Hack God = tn.MakeFreezePtrHack(L"God", pGodMode, 125);
+	God.SetHotkey(VK_NUMPAD2);
+	tn.AddOption(God);
 	while (true)
 		tn.Update();
 	

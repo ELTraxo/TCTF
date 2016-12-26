@@ -9,14 +9,26 @@ enum ValType
 class Pointer
 {
 public:
-	Pointer(uintptr_t pBase, UINT * pOffsets)
+	Pointer(uintptr_t pBase, UINT * pOffsets, UCHAR ofCount)
 	{
 		this->pBase = pBase;
 		this->pOffsets = pOffsets;
+		this->ofCount = ofCount;
+	}
+
+	Pointer(uintptr_t pBase, std::vector<UINT> & vOffsets)
+	{
+		this->pBase = pBase;
+		ofCount = vOffsets.size();
+		pOffsets = new UINT[ofCount];
+
+		for (SIZE_T x = 0; x < ofCount; x++)
+			pOffsets[x] = vOffsets[x];		
 	}
 
 	uintptr_t pBase;
 	UINT * pOffsets;
+	UCHAR ofCount;
 };
 
 class Hack;
