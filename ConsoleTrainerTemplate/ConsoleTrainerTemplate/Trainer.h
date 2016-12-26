@@ -33,7 +33,7 @@ public:
 		std::vector<std::reference_wrapper<Hack>> & pGVHacks;
 	}make;
 
-	
+public:
 	void Toggle(TCHAR * HackName);
 	void Update();
 

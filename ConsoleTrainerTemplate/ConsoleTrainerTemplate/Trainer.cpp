@@ -34,8 +34,6 @@ void Trainer::Init(TCHAR * GameName)
 void Trainer::AddOption(Hack & hack)
 {
 	Options.push_back(hack);
-	//if (hack.GetHackType() == HackType::VALFREEZE)
-	//	GHackVec.push_back(hack);
 }
 
 Trainer::Make::Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks)
