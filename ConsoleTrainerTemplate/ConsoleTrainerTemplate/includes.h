@@ -8,4 +8,4 @@
 #include <thread>
 
 #include "Hack.h"
-
+#include "Trainer.h"

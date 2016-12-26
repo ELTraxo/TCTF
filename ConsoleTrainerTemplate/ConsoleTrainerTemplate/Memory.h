@@ -12,12 +12,12 @@ class Memory
 {
 public:
 	Memory();
-	Memory(wchar_t * GameName);
+	Memory(TCHAR * GameName);
 	~Memory();
 	void Init();
-	void Init(wchar_t * GameName);
+	void Init(TCHAR * GameName);
 	bool GetProcID();
-	bool GetProcID(DWORD & pID, const wchar_t & GameName);
+	bool GetProcID(DWORD & pID, const TCHAR & GameName);
 	bool OpenProc();
 	bool CheckProcDeath();
 	bool GetProcDeathVar();
@@ -68,7 +68,7 @@ public:
 	uintptr_t ScanForCodeCave(uintptr_t pStart, UWORD szSize);
 
 private:
-	wchar_t * wcsGameName = nullptr;
+	TCHAR * wcsGameName = nullptr;
 	HANDLE hProcess = nullptr;
 	DWORD pID = NULL;
 	MODULEENTRY32 me32;

@@ -145,11 +145,13 @@
     <ClInclude Include="Hack.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Trainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hack.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

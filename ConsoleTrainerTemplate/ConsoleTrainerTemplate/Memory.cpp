@@ -9,7 +9,7 @@ Memory::Memory()
 }
 
 //Blocking constructor...
-Memory::Memory(wchar_t * GameName)
+Memory::Memory(TCHAR * GameName)
 	:
 	read(*this),
 	write(*this),
@@ -46,7 +46,7 @@ void Memory::Init()
 	}
 }
 
-void Memory::Init(wchar_t * GameName)
+void Memory::Init(TCHAR * GameName)
 {
 	this->wcsGameName = GameName;
 	Init();
@@ -60,7 +60,7 @@ bool Memory::GetProcID()
 		return false;
 }
 
-bool Memory::GetProcID(DWORD & pID, const wchar_t & GameName)
+bool Memory::GetProcID(DWORD & pID, const TCHAR & GameName)
 {
 	PROCESSENTRY32 pe;
 	pe.dwSize = sizeof(PROCESSENTRY32);
