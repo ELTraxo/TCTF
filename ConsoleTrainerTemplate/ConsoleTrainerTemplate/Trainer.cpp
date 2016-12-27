@@ -65,19 +65,9 @@ Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int val
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
-Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value)
-{
-	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
-}
-
 Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
-}
-
-Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value)
-{
-	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
 Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value)
@@ -85,14 +75,24 @@ Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float v
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
 }
 
-Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value)
+Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
+}
+
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
-Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value)
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value)
 {
-	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
+}
+
+Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
 Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, double value)
@@ -110,7 +110,7 @@ void Trainer::Toggle(TCHAR * HackName)
 	}
 }
 
-void Trainer::Update()
+bool Trainer::Update()
 {
 	for each(Hack & hack in Options)
 	{
@@ -120,9 +120,11 @@ void Trainer::Update()
 			{
 				KeyTimer = clock();
 				hack.Toggle();
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 

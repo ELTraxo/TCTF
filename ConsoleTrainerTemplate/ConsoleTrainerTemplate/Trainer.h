@@ -20,13 +20,15 @@ public:
 		Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks);
 		Hack MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize);
 		Hack MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData);
+		
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value);
-		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value);
-		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value);
-		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value);
+		
+		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value);
+		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value);
+		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value);
 		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, double value);
 
 	private:
@@ -36,7 +38,7 @@ public:
 
 public:
 	void Toggle(TCHAR * HackName);
-	void Update();
+	bool Update();
 
 private:
 	Memory mem;
