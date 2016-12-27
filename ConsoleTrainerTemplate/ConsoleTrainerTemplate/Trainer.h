@@ -25,11 +25,21 @@ public:
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, double value);
-		
+
 		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int value);
 		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, int64_t value);
 		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, float value);
 		Hack MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, double value);
+
+		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, int value);
+		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, int64_t value);
+		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, float value);
+		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, double value);
+				 
+		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, int value);
+		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, int64_t value);
+		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, float value);
+		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, double value);
 
 	private:
 		Memory & mem;

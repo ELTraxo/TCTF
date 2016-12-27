@@ -121,7 +121,7 @@ bool Memory::GetProcDeathVar()
 	return ProcDied;
 }
 
-byte * Memory::ParseAddress(uintptr_t pAddress)
+void Memory::ParseAddress(uintptr_t pAddress, byte * pBytesArr)
 {
 	std::string sAddy;
 
@@ -133,7 +133,7 @@ byte * Memory::ParseAddress(uintptr_t pAddress)
 	if (sAddy.length() < 8)
 	{
 		std::string buff = "";// = std::string(sAddy);
-		for (int x = 0; x < (8 - sAddy.length()); x++)
+		for (UINT x = 0; x < (8 - sAddy.length()); x++)
 		{
 			buff += "0";
 		}
@@ -144,8 +144,8 @@ byte * Memory::ParseAddress(uintptr_t pAddress)
 	byte pAddyBytes[4];
 	
 	hex2bin(sAddy.c_str(), (char*)pAddyBytes);
-
-	return pAddyBytes;
+	//pBytesArr = new byte[4];
+	memcpy(pBytesArr, pAddyBytes, 4);
 }
 
 uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)

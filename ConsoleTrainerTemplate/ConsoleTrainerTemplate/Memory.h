@@ -46,7 +46,7 @@ public:
 	bool OpenProc();
 	bool CheckProcDeath();
 	bool GetProcDeathVar();
-	byte * ParseAddress(uintptr_t pAddress);
+	void ParseAddress(uintptr_t pAddress, byte * pByteArr);
 	
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
 	

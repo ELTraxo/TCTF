@@ -100,6 +100,46 @@ Hack Trainer::Make::MakeFreezePtrHack(TCHAR * HackName, Pointer ptr, double valu
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
+Hack Trainer::Make::MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, int value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::I, pAddress, value);
+}
+
+Hack Trainer::Make::MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, int64_t value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::I64, pAddress, value);
+}
+
+Hack Trainer::Make::MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, float value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::F, pAddress, value);
+}
+
+Hack Trainer::Make::MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, double value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::D, pAddress, value);
+}
+
+Hack Trainer::Make::MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, int value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::I, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
+}
+
+Hack Trainer::Make::MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, int64_t value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::I64, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
+}
+
+Hack Trainer::Make::MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, float value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::F, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
+}
+
+Hack Trainer::Make::MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, double value)
+{
+	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::D, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
+}
+
 void Trainer::Toggle(TCHAR * HackName)
 {
 	for each(Hack & hack in Options)

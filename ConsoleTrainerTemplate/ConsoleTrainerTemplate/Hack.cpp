@@ -230,7 +230,16 @@ void Hack::ToggleHook()
 	if (bEnabled)
 	{
 		if (pCaveAddress == NULL)
+		{
 			pCaveAddress = mem.ScanForCodeCave(0, 64);
+			byte * pOldBytes = new byte[szSize];
+			mem.read.ReadBytes(pAddress, pOldBytes, szSize);
+			for (UINT x = 0; x < szSize; x++)
+			{
+				vOldBytes.push_back(pOldBytes[x]);
+			}
+			delete[] pOldBytes;
+		}
 
 		byte * pData = new byte[vCaveData.size()];
 		for (int x = 0; x < vCaveData.size(); x++)
@@ -239,9 +248,11 @@ void Hack::ToggleHook()
 		}
 
 		mem.write.WriteBytes(pCaveAddress, pData, vCaveData.size());
+		delete[] pData;
 
 		uintptr_t destJumpBackAddy = pAddress - (pCaveAddress + vCaveData.size());
-		byte * pAddy = mem.ParseAddress(destJumpBackAddy);
+		byte * pAddy = new byte[4];
+		mem.ParseAddress(destJumpBackAddy, pAddy);
 
 		byte destJumpBack[5];
 		
@@ -257,13 +268,15 @@ void Hack::ToggleHook()
 				y++;
 			}
 		}
+		delete[] pAddy;
 
 		mem.write.WriteBytes(pCaveAddress + vCaveData.size(), destJumpBack, 5);
 
 		byte * srcJump = new byte[szSize];
 		srcJump[0] = 0xE9;
 		uintptr_t srcToCaveJump = (pCaveAddress - pAddress - 5);
-		byte * pCave = mem.ParseAddress(srcToCaveJump);
+		byte pCave[4];
+		mem.ParseAddress(srcToCaveJump, pCave);
 		y = 1;
 		if (srcToCaveJump > INT_MAX)
 		{
@@ -289,6 +302,10 @@ void Hack::ToggleHook()
 		mem.write.WriteBytes(pAddress, srcJump, szSize);
 		delete[] srcJump;
 	}
+	else
+	{
+		mem.write.WriteBytes(pAddress, (byte*)&vOldBytes[0], szSize);
+	}
 }
 
 void Hack::Toggle()
@@ -301,6 +318,11 @@ void Hack::Toggle()
 	else if (ht == HackType::HOOK)
 	{
 		ToggleHook();
+	}
+	else if (ht == HackType::VALWRITE)
+	{
+		WriteValue();
+		bEnabled = false;
 	}
 	// Freezing isn't toggled.
 }

@@ -38,18 +38,23 @@ int main()
 	tn.Init(L"ac_client.exe");
 	puts("Found Game!");
 
-	TCHAR * HackName = L"GOD";
-	uintptr_t GodPtrBase = 0x0050F4F4;
-	std::vector<UINT> GodOffsets = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
-	Pointer p = Pointer(GodPtrBase, GodOffsets);
-	
-	//One liner setup.
-	//Pointer p = { (uintptr_t)0x0050F4F4 ,std::vector<UINT>{ 0x358, 0x48, 0x1e8, 0x8, 0xf8 } };
 
-	Hack God = tn.make.MakeFreezePtrHack(HackName, p, 500);
-	God.SetHotkey(VK_NUMPAD1);
-	tn.AddOption(God);
+
+	TCHAR * sInfAmmo = L"InfAmmo";
+	uintptr_t pAddress = 0x004637E6;
+	UINT szSize = 5;
+	std::vector<byte> vCaveData = {0x8b, 0x76, 0x14};
+	Hack InfAmmo = tn.make.MakeInjectionHack(sInfAmmo, pAddress, szSize, vCaveData);
+	InfAmmo.SetHotkey(VK_NUMPAD1);
+	tn.AddOption(InfAmmo);
 	
+	std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
+	//Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
+	Hack God = tn.make.MakeFreezePtrHack(L"God", pGodMode, 125);
+	God.SetHotkey(VK_NUMPAD2);
+	tn.AddOption(God);
 	while (true)
 		tn.Update();
 	
