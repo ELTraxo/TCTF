@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Freeza.h" />
     <ClInclude Include="Hack.h" />
+    <ClInclude Include="HexStr.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Trainer.h" />

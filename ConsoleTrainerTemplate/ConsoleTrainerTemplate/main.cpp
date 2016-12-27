@@ -38,8 +38,13 @@ int main()
 	tn.Init(L"ac_client.exe");
 	puts("Found Game!");
 
+
+
 	TCHAR * sInfAmmo = L"InfAmmo";
-	Hack InfAmmo = tn.make.MakePatchHack(sInfAmmo, 0x004637E9, 2);
+	uintptr_t pAddress = 0x004637E6;
+	UINT szSize = 5;
+	std::vector<byte> vCaveData = {0x8b, 0x76, 0x14};
+	Hack InfAmmo = tn.make.MakeInjectionHack(sInfAmmo, pAddress, szSize, vCaveData);
 	InfAmmo.SetHotkey(VK_NUMPAD1);
 	tn.AddOption(InfAmmo);
 	

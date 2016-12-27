@@ -15,7 +15,10 @@ class Hack
 {
 public: //ctors
 	// code patch ctor
-	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize); 
+	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize);
+
+	// code injection ctor
+	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize, byte * pData, UINT iCaveSize);
 
 	// val freeze ctors
 	Hack(TCHAR * HackName, Memory & mem,std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value);
@@ -43,6 +46,7 @@ public: //Hotkey
 public: //Toggles
 	void TogglePatch();
 	void WriteValue();
+	void ToggleHook();
 	void Toggle();
 
 	void AddHackToVec();
@@ -59,8 +63,10 @@ private:
 
 	//for code patch and maybe hooking hacks
 	uintptr_t pAddress = NULL;
+	uintptr_t pCaveAddress = NULL;
 	UINT szSize = NULL;
 	std::vector<byte> vOldBytes;
+	std::vector<byte> vCaveData;
 
 	//for pointer based hacks.
 	uintptr_t pBase = NULL;

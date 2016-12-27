@@ -48,6 +48,18 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 	return Hack(HackName, mem, HackType::CODEPATCH, (uintptr_t)pAddress, szSize);
 }
 
+Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData)
+{
+	byte * pData = new byte[vData.size()];
+	for (int x = 0; x < vData.size(); x++)
+	{
+		pData[x] = vData[x];
+	}
+	Hack hack = Hack(HackName, mem, HackType::HOOK, pAddress, szSize, pData, (UINT)vData.size());
+	delete[] pData;
+	return hack;
+}
+
 Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value)
 {
 	return Hack(HackName, mem, pGVHacks, HackType::VALFREEZE, ValType::I, pAddress, value);

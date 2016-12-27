@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "HexStr.h"
 
 Memory::Memory()
 	:
@@ -118,6 +119,33 @@ bool Memory::CheckProcDeath()
 bool Memory::GetProcDeathVar()
 {
 	return ProcDied;
+}
+
+byte * Memory::ParseAddress(uintptr_t pAddress)
+{
+	std::string sAddy;
+
+	std::string sAddress;
+
+	std::stringstream ss(sAddress);
+	ss << std::hex << pAddress;
+	ss >> sAddy;
+	if (sAddy.length() < 8)
+	{
+		std::string buff = "";// = std::string(sAddy);
+		for (int x = 0; x < (8 - sAddy.length()); x++)
+		{
+			buff += "0";
+		}
+		buff += sAddy;
+		sAddy = buff;
+	}
+
+	byte pAddyBytes[4];
+	
+	hex2bin(sAddy.c_str(), (char*)pAddyBytes);
+
+	return pAddyBytes;
 }
 
 uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)
@@ -382,6 +410,14 @@ bool Memory::Pattern::GetModule(TCHAR * pModName)
 		CloseHandle(hSnapshot);
 	}
 	return false;
+}
+
+uintptr_t Memory::Pattern::GetModuleBase(TCHAR * pModName)
+{
+	if (GetModule(pModName))
+		return uintptr_t(mem.me32.modBaseAddr);
+	else
+		return uintptr_t(NULL);
 }
 
 uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave)

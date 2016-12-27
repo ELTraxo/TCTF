@@ -46,7 +46,7 @@ public:
 	bool OpenProc();
 	bool CheckProcDeath();
 	bool GetProcDeathVar();
-
+	byte * ParseAddress(uintptr_t pAddress);
 	
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
 	
@@ -83,6 +83,7 @@ public:
 		bool CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave);
 		uintptr_t Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask, bool bCodeCave);
 		bool GetModule(TCHAR * pModName);
+		uintptr_t GetModuleBase(TCHAR * pModName);
 		uintptr_t ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave);
 		uintptr_t ScanProcess(char * pattern, char * mask, bool bCodeCave);
 

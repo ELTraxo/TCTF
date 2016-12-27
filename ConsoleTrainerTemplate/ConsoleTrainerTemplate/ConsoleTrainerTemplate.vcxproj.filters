@@ -47,5 +47,8 @@
     <ClInclude Include="Traxo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HexStr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

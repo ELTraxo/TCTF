@@ -1,85 +1,99 @@
 #include "includes.h"
 
 // code patch ctor
-Hack::Hack(TCHAR * GameName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize)
+Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize)
 	:
 	mem(mem),
 	pGVHacks(std::vector<std::reference_wrapper<Hack>>()) //Don't really need a ref to the global hacks vec
 {
-	InitHackAndAddress(GameName, ht, vt, pAddress);
+	InitHackAndAddress(HackName, ht, vt, pAddress);
 	this->szSize = szSize;
 }
 
+// code injection ctor
+Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize, byte * pData, UINT iCaveSize)
+	:
+	mem(mem),
+	pGVHacks(std::vector<std::reference_wrapper<Hack>>())
+{
+	InitHackAndAddress(HackName, ht, vt, pAddress);
+	this->szSize = szSize;
+	for (int x = 0; x < iCaveSize; x++)
+	{
+		vCaveData.push_back(pData[x]);
+	}
+}
+
 // val freeze ctors...
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndAddress(GameName, ht, vt, pAddress);
+	InitHackAndAddress(HackName, ht, vt, pAddress);
 	iValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
 	iValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndAddress(GameName, ht, vt, pAddress);
+	InitHackAndAddress(HackName, ht, vt, pAddress);
 	i64Value = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
 	i64Value = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, float value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, float value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndAddress(GameName, ht, vt, pAddress);
+	InitHackAndAddress(HackName, ht, vt, pAddress);
 	fValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
 	fValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, double value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, double value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndAddress(GameName, ht, vt, pAddress);
+	InitHackAndAddress(HackName, ht, vt, pAddress);
 	dValue = value;
 }
 
-Hack::Hack(TCHAR * GameName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
-	InitHackAndPointer(GameName, ht, vt, pBase, Offsets, count);
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
 	dValue = value;
 }
 
@@ -93,7 +107,8 @@ void Hack::InitHackAndAddress(TCHAR * HackName, HackType ht, ValType vt, uintptr
 	this->ht = ht;
 	this->vt = vt;
 	this->pAddress = pAddress;
-	AddHackToVec();
+	if(ht != HackType::CODEPATCH || ht != HackType::HOOK)
+		AddHackToVec();
 }
 
 void Hack::InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count)
@@ -104,7 +119,8 @@ void Hack::InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr
 	this->pBase = pBase;
 	this->pOffsets = Offsets;
 	this->ucOffsetCount = count;
-	AddHackToVec();
+	if (ht != HackType::CODEPATCH || ht != HackType::HOOK)
+		AddHackToVec();
 }
 
 TCHAR * Hack::GetName()
@@ -209,6 +225,72 @@ void Hack::WriteValue()
 	}
 }
 
+void Hack::ToggleHook()
+{
+	if (bEnabled)
+	{
+		if (pCaveAddress == NULL)
+			pCaveAddress = mem.ScanForCodeCave(0, 64);
+
+		byte * pData = new byte[vCaveData.size()];
+		for (int x = 0; x < vCaveData.size(); x++)
+		{
+			pData[x] = vCaveData[x];
+		}
+
+		mem.write.WriteBytes(pCaveAddress, pData, vCaveData.size());
+
+		uintptr_t destJumpBackAddy = pAddress - (pCaveAddress + vCaveData.size());
+		byte * pAddy = mem.ParseAddress(destJumpBackAddy);
+
+		byte destJumpBack[5];
+		
+		destJumpBack[0] = 0xE9;
+		int y = 1;
+		for (int x = 4; x > 0; x--)
+		{
+			if(x == 4)
+				destJumpBack[x] = pAddy[x - x];
+			else
+			{
+				destJumpBack[x] = pAddy[x - (x - y)];
+				y++;
+			}
+		}
+
+		mem.write.WriteBytes(pCaveAddress + vCaveData.size(), destJumpBack, 5);
+
+		byte * srcJump = new byte[szSize];
+		srcJump[0] = 0xE9;
+		uintptr_t srcToCaveJump = (pCaveAddress - pAddress - 5);
+		byte * pCave = mem.ParseAddress(srcToCaveJump);
+		y = 1;
+		if (srcToCaveJump > INT_MAX)
+		{
+			for (int x = 4; x > 0; x--)
+			{
+				if (x == 4)
+					srcJump[x] = pCave[x - x];
+				else
+				{
+					srcJump[x] = pCave[x - (x - y)];
+					y++;
+				}
+			}
+			
+		}
+		else
+		{
+			for (int x = 1; x < 5; x++)
+			{
+				srcJump[x] = pCave[x - 1];
+			}
+		}
+		mem.write.WriteBytes(pAddress, srcJump, szSize);
+		delete[] srcJump;
+	}
+}
+
 void Hack::Toggle()
 {
 	bEnabled = !bEnabled;
@@ -216,6 +298,11 @@ void Hack::Toggle()
 	{
 		TogglePatch();
 	}
+	else if (ht == HackType::HOOK)
+	{
+		ToggleHook();
+	}
+	// Freezing isn't toggled.
 }
 
 void Hack::AddHackToVec()
