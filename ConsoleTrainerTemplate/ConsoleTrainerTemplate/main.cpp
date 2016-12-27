@@ -32,31 +32,33 @@ int main()
 	//} while (DecAmmo == 0);
 	//puts("Found pattern.");
 	//uintptr_t pCodeCave = mem.ScanForCodeCave(0, 128);
-
-	Trainer tn(GHackVec); // We could do it like dis
+	Trainer * tn = &trainer;
+	 // We could do it like dis
 	puts("Searching for game...");
-	tn.Init(L"ac_client.exe");
+	tn->Init(L"ac_client.exe");
 	puts("Found Game!");
 
 
-
+	// example of an injection hack.
 	TCHAR * sInfAmmo = L"InfAmmo";
 	uintptr_t pAddress = 0x004637E6;
 	UINT szSize = 5;
 	std::vector<byte> vCaveData = {0x8b, 0x76, 0x14};
-	Hack InfAmmo = tn.make.MakeInjectionHack(sInfAmmo, pAddress, szSize, vCaveData);
+	
+	Hack InfAmmo = tn->make.MakeInjectionHack(sInfAmmo, pAddress, szSize, vCaveData);
+	
 	InfAmmo.SetHotkey(VK_NUMPAD1);
-	tn.AddOption(InfAmmo);
+	tn->AddOption(InfAmmo);
 	
 	std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
 	UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
 	Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
 	//Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
-	Hack God = tn.make.MakeFreezePtrHack(L"God", pGodMode, 125);
+	Hack God = tn->make.MakeFreezePtrHack(L"God", pGodMode, 125);
 	God.SetHotkey(VK_NUMPAD2);
-	tn.AddOption(God);
+	tn->AddOption(God);
 	while (true)
-		tn.Update();
+		tn->Update();
 	
 	system("pause");
 	return 0;
