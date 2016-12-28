@@ -28,7 +28,7 @@ public:
 
 	uintptr_t pBase;
 	UINT * pOffsets;
-	UCHAR ofCount;
+	UINT ofCount;
 };
 
 class Hack;
@@ -41,6 +41,7 @@ public:
 	~Memory();
 	void Init();
 	void Init(TCHAR * GameName);
+	void ReInit();
 	bool GetProcID();
 	bool GetProcID(DWORD & pID, const TCHAR & GameName);
 	bool OpenProc();
@@ -98,8 +99,9 @@ private:
 	HANDLE hProcess = nullptr;
 	DWORD pID = NULL;
 	MODULEENTRY32 me32;
+
+public:
 	bool ProcDied = false;
-	std::vector<Hack> Hacks;
 };
 
 void FreezeThread(Memory & mem);

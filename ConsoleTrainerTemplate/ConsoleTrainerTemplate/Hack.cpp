@@ -18,7 +18,7 @@ Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT
 {
 	InitHackAndAddress(HackName, ht, vt, pAddress);
 	this->szSize = szSize;
-	for (int x = 0; x < iCaveSize; x++)
+	for (UINT x = 0; x < iCaveSize; x++)
 	{
 		vCaveData.push_back(pData[x]);
 	}
@@ -121,6 +121,12 @@ void Hack::InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr
 	this->ucOffsetCount = count;
 	if (ht != HackType::CODEPATCH || ht != HackType::HOOK)
 		AddHackToVec();
+}
+
+void Hack::ReInit()
+{
+	if (vOldBytes.size() > 0)
+		vOldBytes.clear();
 }
 
 TCHAR * Hack::GetName()
@@ -242,7 +248,7 @@ void Hack::ToggleHook()
 		}
 
 		byte * pData = new byte[vCaveData.size()];
-		for (int x = 0; x < vCaveData.size(); x++)
+		for (UINT x = 0; x < vCaveData.size(); x++)
 		{
 			pData[x] = vCaveData[x];
 		}
@@ -324,7 +330,7 @@ void Hack::Toggle()
 		WriteValue();
 		bEnabled = false;
 	}
-	// Freezing isn't toggled.
+	// Freezing isn't toggled here.
 }
 
 void Hack::AddHackToVec()

@@ -1,6 +1,6 @@
 #pragma once
 #include "includes.h"
-#include <ctime>
+#include <chrono>
 
 
 class Trainer
@@ -11,8 +11,7 @@ public:
 	~Trainer();
 	void Init();
 	void Init(TCHAR * GameName);
-	void AddOption(Hack & hack);
-	
+	void ReInit();
 public:
 	class Make
 	{
@@ -46,15 +45,18 @@ public:
 		std::vector<std::reference_wrapper<Hack>> & pGVHacks;
 	}make;
 
-public:
-	void Toggle(TCHAR * HackName);
+public:	
+	void AddOption(Hack & hack);
+	bool IsRunning();
 	bool Update();
 
 private:
 	Memory mem;
-	std::vector<std::reference_wrapper<Hack>> Options;
-	std::vector<std::reference_wrapper<Hack>> & pGVHacks;
+	std::vector<std::reference_wrapper<Hack>> Options; //All options
+	std::vector<std::reference_wrapper<Hack>> & pGVHacks; //All val freeze opts
 	TCHAR * GameName;
-	long KeyTimer;
+	
+	std::chrono::steady_clock::time_point keyTimer = std::chrono::steady_clock::now();
+	float keyDelay = 0.2f; // = seconds
 };
 

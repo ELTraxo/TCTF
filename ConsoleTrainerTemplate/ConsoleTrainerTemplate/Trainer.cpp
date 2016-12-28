@@ -21,7 +21,7 @@ Trainer::~Trainer()
 
 void Trainer::Init()
 {
-	KeyTimer = clock();
+//	KeyTimer = clock();
 	mem.Init(GameName);
 }
 
@@ -31,9 +31,13 @@ void Trainer::Init(TCHAR * GameName)
 	Init();
 }
 
-void Trainer::AddOption(Hack & hack)
+void Trainer::ReInit()
 {
-	Options.push_back(hack);
+	mem.ReInit();
+	//for each (Hack hack in Options)
+	//{
+	//	hack.ReInit();
+	//}
 }
 
 Trainer::Make::Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks)
@@ -51,7 +55,7 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData)
 {
 	byte * pData = new byte[vData.size()];
-	for (int x = 0; x < vData.size(); x++)
+	for (UINT x = 0; x < vData.size(); x++)
 	{
 		pData[x] = vData[x];
 	}
@@ -140,25 +144,30 @@ Hack Trainer::Make::MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, double va
 	return Hack(HackName, mem, pGVHacks, HackType::VALWRITE, ValType::D, ptr.pBase, ptr.pOffsets, ptr.ofCount, value);
 }
 
-void Trainer::Toggle(TCHAR * HackName)
+void Trainer::AddOption(Hack & hack)
 {
-	for each(Hack & hack in Options)
-	{
-		TCHAR * currName = hack.GetName();
-		if (!_tcscmp(currName, HackName))
-			hack.Toggle();
-	}
+	Options.push_back(hack);
+}
+
+bool Trainer::IsRunning()
+{
+	return (!mem.CheckProcDeath());
 }
 
 bool Trainer::Update()
 {
+	using namespace std::chrono;
+	steady_clock::time_point check = steady_clock::now();
+	
+	//duration<int, milliseconds> timeSince = steady_clock::now() - keyTimer;
+	duration<float> runtime = check - keyTimer;
 	for each(Hack & hack in Options)
 	{
-		if (clock() > KeyTimer + 250)
+		if (runtime.count() > keyDelay)
 		{
 			if (GetAsyncKeyState(hack.GetHotkey()))
 			{
-				KeyTimer = clock();
+				keyTimer = steady_clock::now();
 				hack.Toggle();
 				return true;
 			}

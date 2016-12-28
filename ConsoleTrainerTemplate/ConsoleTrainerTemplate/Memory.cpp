@@ -53,6 +53,14 @@ void Memory::Init(TCHAR * GameName)
 	Init();
 }
 
+void Memory::ReInit()
+{
+	hProcess = NULL;
+	pID = NULL;
+	me32 = { 0 };
+	this->Init();
+}
+
 bool Memory::GetProcID()
 {
 	if (GetProcID(this->pID, *this->wcsGameName))

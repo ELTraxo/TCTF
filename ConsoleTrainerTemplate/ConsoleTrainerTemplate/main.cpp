@@ -40,7 +40,7 @@ int main()
 
 
 	// example of an injection hack.
-	TCHAR * sInfAmmo = L"InfAmmo";
+	TCHAR * sInfAmmo = L"Inf Ammo";
 	uintptr_t pAddress = 0x004637E6;
 	UINT szSize = 5;
 	std::vector<byte> vCaveData = {0x8b, 0x76, 0x14};
@@ -58,7 +58,15 @@ int main()
 	God.SetHotkey(VK_NUMPAD2);
 	tn->AddOption(God);
 	while (true)
+	{
 		tn->Update();
+		if (!tn->IsRunning())
+		{
+			system("cls");
+			puts("Searching for game...");
+			tn->ReInit();
+		}
+	}
 	
 	system("pause");
 	return 0;
