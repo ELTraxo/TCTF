@@ -34,10 +34,10 @@ void Trainer::Init(TCHAR * GameName)
 void Trainer::ReInit()
 {
 	mem.ReInit();
-	//for each (Hack hack in Options)
-	//{
-	//	hack.ReInit();
-	//}
+	for each (Hack & hack in Options)
+	{
+		hack.ReInit();
+	}
 }
 
 Trainer::Make::Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks)

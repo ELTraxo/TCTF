@@ -35,6 +35,7 @@ public: //Inits, this is where hacks are added to the global freeze vec.
 	void InitHackAndAddress(TCHAR * HackName, HackType ht, ValType vt, uintptr_t pAddress);
 	void InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count);
 	void ReInit();
+
 public: //Getters
 	TCHAR* GetName();
 	HackType GetHackType();

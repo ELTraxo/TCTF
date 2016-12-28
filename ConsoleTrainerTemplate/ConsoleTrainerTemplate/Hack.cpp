@@ -125,8 +125,13 @@ void Hack::InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr
 
 void Hack::ReInit()
 {
-	if (vOldBytes.size() > 0)
+	if (!vOldBytes.empty())
 		vOldBytes.clear();
+	
+	if (pCaveAddress != NULL)
+		pCaveAddress = NULL;
+
+	bEnabled = false;
 }
 
 TCHAR * Hack::GetName()
@@ -237,13 +242,14 @@ void Hack::ToggleHook()
 	{
 		if (pCaveAddress == NULL)
 		{
-			pCaveAddress = mem.ScanForCodeCave(0, 64);
+			pCaveAddress = mem.ScanForCodeCave(0, vCaveData.size());
+
 			byte * pOldBytes = new byte[szSize];
 			mem.read.ReadBytes(pAddress, pOldBytes, szSize);
+			
 			for (UINT x = 0; x < szSize; x++)
-			{
 				vOldBytes.push_back(pOldBytes[x]);
-			}
+			
 			delete[] pOldBytes;
 		}
 
