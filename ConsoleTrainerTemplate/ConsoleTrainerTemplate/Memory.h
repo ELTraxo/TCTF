@@ -31,6 +31,18 @@ public:
 	UINT ofCount;
 };
 
+class Pattern
+{
+public:
+	Pattern(byte * pattern, std::string mask)
+	{
+		this->pattern = pattern;
+		this->mask = mask;
+	}
+	byte * pattern;
+	std::string mask;
+};
+
 class Hack;
 
 class Memory
@@ -86,7 +98,7 @@ public:
 		bool GetModule(TCHAR * pModName);
 		uintptr_t GetModuleBase(TCHAR * pModName);
 		uintptr_t ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave);
-		uintptr_t ScanProcess(char * pattern, char * mask, bool bCodeCave);
+		uintptr_t ScanProcess(char * pattern, const char * mask, bool bCodeCave);
 
 	private:
 		Memory & mem;

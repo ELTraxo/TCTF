@@ -52,6 +52,12 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 	return Hack(HackName, mem, HackType::CODEPATCH, (uintptr_t)pAddress, szSize);
 }
 
+Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pattern & pPattern, UINT szSize)
+{
+	
+	return Hack(HackName, mem, HackType::CODEPATCH, mem.pattern.ScanProcess((char*)pPattern.pattern, pPattern.mask.c_str(), false), szSize);
+}
+
 Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData)
 {
 	byte * pData = new byte[vData.size()];
@@ -62,6 +68,11 @@ Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSi
 	Hack hack = Hack(HackName, mem, HackType::HOOK, pAddress, szSize, pData, (UINT)vData.size());
 	delete[] pData;
 	return hack;
+}
+
+Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, UINT szSize, std::vector<byte> vData)
+{
+	return MakeInjectionHack(HackName, mem.pattern.ScanProcess((char*)pPattern.pattern, pPattern.mask.c_str(), false), szSize, vData);
 }
 
 Hack Trainer::Make::MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value)

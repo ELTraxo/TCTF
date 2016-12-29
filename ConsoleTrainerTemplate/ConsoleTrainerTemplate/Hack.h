@@ -20,14 +20,15 @@ public: //ctors
 	// code injection ctor
 	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize, byte * pData, UINT iCaveSize);
 
-	// val freeze ctors
-	Hack(TCHAR * HackName, Memory & mem,std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value);
-	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value);
+	// val write/freeze ctors
+	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value);
-	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, float value);
-	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, double value);
+	
+	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value);
+	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value);
+	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value);
 	~Hack();
 
@@ -40,19 +41,21 @@ public: //Getters
 	TCHAR* GetName();
 	HackType GetHackType();
 
-public: //Hotkey
+	//Hotkey
 	void SetHotkey(int vKey);
 	int GetHotkey();
 
-public: //Toggles
+	//Toggles & Helpers
 	void TogglePatch();
 	void WriteValue();
-	void ToggleHook();
+	void HookInit();
+	void WriteCaveData();
+	void WriteJmp2Cave();
+	void ToggleInjection();
 	void Toggle();
 
 	void AddHackToVec();
-	void AddToVec(std::vector<Hack> & hack);
-
+	
 private:
 	Memory & mem;
 	HackType ht;

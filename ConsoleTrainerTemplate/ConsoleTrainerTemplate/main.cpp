@@ -38,13 +38,13 @@ int main()
 	tn->Init(L"ac_client.exe");
 	puts("Found Game!");
 		
-	//std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
-	//UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
-	//Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
-	////Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
-	//Hack God = tn->make.MakeFreezePtrHack(L"God", pGodMode, 125);
-	//God.SetHotkey(VK_NUMPAD2);
-	//tn->AddOption(God);
+	std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
+	//Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
+	Hack God = tn->make.MakeFreezePtrHack(L"God", pGodMode, 125);
+	God.SetHotkey(VK_NUMPAD2);
+	tn->AddOption(God);
 
 	// example of an injection hack.
 	TCHAR * sInfAmmo = L"Inf Ammo";

@@ -18,7 +18,9 @@ public:
 	public:
 		Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks);
 		Hack MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize);
+		Hack MakePatchHack(TCHAR * HackName, Pattern & pPattern, UINT szSize);
 		Hack MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData);
+		Hack MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, UINT szSize, std::vector<byte> vData);
 		
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value);

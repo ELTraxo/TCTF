@@ -34,30 +34,12 @@ Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Ha
 	iValue = value;
 }
 
-Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
-	:
-	mem(mem),
-	pGVHacks(pGVHacks)
-{
-	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
-	iValue = value;
-}
-
 Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value)
 	:
 	mem(mem),
 	pGVHacks(pGVHacks)
 {
 	InitHackAndAddress(HackName, ht, vt, pAddress);
-	i64Value = value;
-}
-
-Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
-	:
-	mem(mem),
-	pGVHacks(pGVHacks)
-{
-	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
 	i64Value = value;
 }
 
@@ -70,15 +52,6 @@ Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Ha
 	fValue = value;
 }
 
-Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
-	:
-	mem(mem),
-	pGVHacks(pGVHacks)
-{
-	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
-	fValue = value;
-}
-
 Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, double value)
 	:
 	mem(mem),
@@ -86,6 +59,33 @@ Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Ha
 {
 	InitHackAndAddress(HackName, ht, vt, pAddress);
 	dValue = value;
+}
+
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value)
+	:
+	mem(mem),
+	pGVHacks(pGVHacks)
+{
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
+	iValue = value;
+}
+
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value)
+	:
+	mem(mem),
+	pGVHacks(pGVHacks)
+{
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
+	i64Value = value;
+}
+
+Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value)
+	:
+	mem(mem),
+	pGVHacks(pGVHacks)
+{
+	InitHackAndPointer(HackName, ht, vt, pBase, Offsets, count);
+	fValue = value;
 }
 
 Hack::Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, double value)
@@ -236,83 +236,98 @@ void Hack::WriteValue()
 	}
 }
 
-void Hack::ToggleHook()
+void Hack::HookInit()
+{
+	pCaveAddress = mem.ScanForCodeCave(0, vCaveData.size());
+
+	byte * pOldBytes = new byte[szSize];
+	mem.read.ReadBytes(pAddress, pOldBytes, szSize);
+
+	for (UINT x = 0; x < szSize; x++)
+		vOldBytes.push_back(pOldBytes[x]);
+
+	delete[] pOldBytes;
+}
+
+void Hack::WriteCaveData()
+{
+	//Actual cave data
+	byte * pData = new byte[vCaveData.size()];
+	for (UINT x = 0; x < vCaveData.size(); x++)
+	{
+		pData[x] = vCaveData[x];
+	}
+
+	mem.write.WriteBytes(pCaveAddress, pData, vCaveData.size());
+	delete[] pData;
+
+	// rest of this is for the jump back.
+	uintptr_t destJumpBackAddy = pAddress - (pCaveAddress + vCaveData.size());
+	byte * pAddy = new byte[4];
+	mem.ParseAddress(destJumpBackAddy, pAddy);
+
+	byte destJumpBack[5];
+
+	destJumpBack[0] = 0xE9;
+	int y = 1;
+	for (int x = 4; x > 0; x--)
+	{
+		if (x == 4)
+			destJumpBack[x] = pAddy[x - x];
+		else
+		{
+			destJumpBack[x] = pAddy[x - (x - y)];
+			y++;
+		}
+	}
+	delete[] pAddy;
+
+	mem.write.WriteBytes(pCaveAddress + vCaveData.size(), destJumpBack, 5);
+}
+
+void Hack::WriteJmp2Cave()
+{
+	byte * srcJump = new byte[szSize];
+	srcJump[0] = 0xE9;
+	uintptr_t srcToCaveJump = (pCaveAddress - pAddress - 5);
+	byte pCave[4];
+	mem.ParseAddress(srcToCaveJump, pCave);
+
+	int y = 1;
+	if (srcToCaveJump > INT_MAX)
+	{
+		for (int x = 4; x > 0; x--)
+		{
+			if (x == 4)
+				srcJump[x] = pCave[x - x];
+			else
+			{
+				srcJump[x] = pCave[x - (x - y)];
+				y++;
+			}
+		}
+
+	}
+	else
+	{
+		for (int x = 1; x < 5; x++)
+		{
+			srcJump[x] = pCave[x - 1];
+		}
+	}
+	mem.write.WriteBytes(pAddress, srcJump, szSize);
+	delete[] srcJump;
+}
+
+void Hack::ToggleInjection()
 {
 	if (bEnabled)
 	{
 		if (pCaveAddress == NULL)
-		{
-			pCaveAddress = mem.ScanForCodeCave(0, vCaveData.size());
+			HookInit();
 
-			byte * pOldBytes = new byte[szSize];
-			mem.read.ReadBytes(pAddress, pOldBytes, szSize);
-			
-			for (UINT x = 0; x < szSize; x++)
-				vOldBytes.push_back(pOldBytes[x]);
-			
-			delete[] pOldBytes;
-		}
-
-		byte * pData = new byte[vCaveData.size()];
-		for (UINT x = 0; x < vCaveData.size(); x++)
-		{
-			pData[x] = vCaveData[x];
-		}
-
-		mem.write.WriteBytes(pCaveAddress, pData, vCaveData.size());
-		delete[] pData;
-
-		uintptr_t destJumpBackAddy = pAddress - (pCaveAddress + vCaveData.size());
-		byte * pAddy = new byte[4];
-		mem.ParseAddress(destJumpBackAddy, pAddy);
-
-		byte destJumpBack[5];
-		
-		destJumpBack[0] = 0xE9;
-		int y = 1;
-		for (int x = 4; x > 0; x--)
-		{
-			if(x == 4)
-				destJumpBack[x] = pAddy[x - x];
-			else
-			{
-				destJumpBack[x] = pAddy[x - (x - y)];
-				y++;
-			}
-		}
-		delete[] pAddy;
-
-		mem.write.WriteBytes(pCaveAddress + vCaveData.size(), destJumpBack, 5);
-
-		byte * srcJump = new byte[szSize];
-		srcJump[0] = 0xE9;
-		uintptr_t srcToCaveJump = (pCaveAddress - pAddress - 5);
-		byte pCave[4];
-		mem.ParseAddress(srcToCaveJump, pCave);
-		y = 1;
-		if (srcToCaveJump > INT_MAX)
-		{
-			for (int x = 4; x > 0; x--)
-			{
-				if (x == 4)
-					srcJump[x] = pCave[x - x];
-				else
-				{
-					srcJump[x] = pCave[x - (x - y)];
-					y++;
-				}
-			}
-			
-		}
-		else
-		{
-			for (int x = 1; x < 5; x++)
-			{
-				srcJump[x] = pCave[x - 1];
-			}
-		}
-		mem.write.WriteBytes(pAddress, srcJump, szSize);
-		delete[] srcJump;
+		WriteCaveData();
+		WriteJmp2Cave();
 	}
 	else
 	{
@@ -329,7 +344,7 @@ void Hack::Toggle()
 	}
 	else if (ht == HackType::HOOK)
 	{
-		ToggleHook();
+		ToggleInjection();
 	}
 	else if (ht == HackType::VALWRITE)
 	{
@@ -342,9 +357,4 @@ void Hack::Toggle()
 void Hack::AddHackToVec()
 {
 	pGVHacks.push_back(*this);
-}
-
-void Hack::AddToVec(std::vector<Hack>& hack)
-{
-	hack.push_back(*this);
 }
