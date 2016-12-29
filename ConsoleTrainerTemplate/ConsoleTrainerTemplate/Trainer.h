@@ -2,6 +2,7 @@
 #include "includes.h"
 #include <chrono>
 
+class Menu;
 
 class Trainer
 {
@@ -12,6 +13,8 @@ public:
 	void Init();
 	void Init(TCHAR * GameName);
 	void ReInit();
+	bool IsReady();
+
 public:
 	class Make
 	{
@@ -53,13 +56,17 @@ public:
 	void AddOption(Hack & hack);
 	bool IsRunning();
 	bool Update();
+	std::vector<std::reference_wrapper<Hack>> & GetOptions();
 
 private:
 	Memory mem;
+	TCHAR * GameName;
+	bool bInitted = false;
+	bool bSearching = false;
 	std::vector<std::reference_wrapper<Hack>> Options; //All options
 	std::vector<std::reference_wrapper<Hack>> & pGVHacks; //All val freeze opts
-	TCHAR * GameName;
 	
+	//key press related
 	std::chrono::steady_clock::time_point keyTimer = std::chrono::steady_clock::now();
 	float keyDelay = 0.2f; // = seconds
 };

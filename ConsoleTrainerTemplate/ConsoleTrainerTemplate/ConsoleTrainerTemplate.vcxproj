@@ -147,6 +147,7 @@
     <ClInclude Include="HexStr.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Trainer.h" />
     <ClInclude Include="Traxo.h" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <ClCompile Include="Hack.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -23,6 +23,8 @@ void Trainer::Init()
 {
 //	KeyTimer = clock();
 	mem.Init(GameName);
+	bInitted = true;
+	bSearching = false;
 }
 
 void Trainer::Init(TCHAR * GameName)
@@ -38,6 +40,13 @@ void Trainer::ReInit()
 	{
 		hack.ReInit();
 	}
+	bInitted = true;
+	bSearching = false;
+}
+
+bool Trainer::IsReady()
+{
+	return bInitted;
 }
 
 Trainer::Make::Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks)
@@ -237,8 +246,27 @@ bool Trainer::Update()
 				return true;
 			}
 		}
+
+		if (!IsRunning())
+		{
+			bInitted = false;
+			if (!bSearching)
+			{
+				bSearching = true;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 	return false;
+}
+
+std::vector<std::reference_wrapper<Hack>> & Trainer::GetOptions()
+{
+	return Options;
 }
 
 

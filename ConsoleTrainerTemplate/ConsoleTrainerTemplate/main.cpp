@@ -1,4 +1,7 @@
 #include "Traxo.h"
+#include "Menu.h"
+
+void TrainerInitializer(Trainer * tn);
 
 int main()
 {
@@ -32,48 +35,73 @@ int main()
 	//} while (DecAmmo == 0);
 	//puts("Found pattern.");
 	//uintptr_t pCodeCave = mem.ScanForCodeCave(0, 128);
-	Trainer * tn = &trainer;
+	
 	 // We could do it like dis
-	puts("Searching for game...");
-	tn->Init(L"ac_client.exe");
-	puts("Found Game!");
-		
-	std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
-	UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
-	Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
+	//puts("Searching for game...");
+	//tn->Init(L"ac_client.exe");
+	//puts("Found Game!");
+	//	
+	//std::vector<UINT> GodOFs = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	//UINT ofGodMode[] = { 0x358, 0x48, 0x1e8, 0x8, 0xf8 };
+	//Pointer pGodMode((uintptr_t)0x50f4f4, GodOFs);
 	//Pointer pGodMode((uintptr_t)0x50f4f4, ofGodMode, (sizeof(ofGodMode) / sizeof(ofGodMode[0])));
-	Hack God = tn->make.MakeFreezePtrHack(L"God", pGodMode, 125);
-	God.SetHotkey(VK_NUMPAD2);
-	tn->AddOption(God);
+	//Hack God = tn->make.MakeFreezePtrHack(L"God", pGodMode, 125);
+	//God.SetHotkey(VK_NUMPAD2);
+	//tn->AddOption(God);
 
-	// example of an injection hack.
-	TCHAR * sInfAmmo = L"Inf Ammo";
-	uintptr_t pAddress = 0x004637E6;
-	UINT szSize = 5;
-	std::vector<byte> vCaveData = { 0x8b, 0x76, 0x14 };
+	//// example of an injection hack.
+	//TCHAR * sInfAmmo = L"Inf Ammo";
+	//uintptr_t pAddress = 0x004637E6;
+	//UINT szSize = 5;
+	//std::vector<byte> vCaveData = { 0x8b, 0x76, 0x14 };
 
 	//std::vector<byte> bPattern = { 0x8b, 0x76, 0x00, 0xff, 0x0e, 0x57, 0x8b, 0x7c, 0x00, 0x00, 0x8d, 0x74, 0x00, 0x00, 0xe8, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x5e, 0xb0, 0x00, 0x5b, 0x8b, 0xe5, 0x5d, 0xc2, 0x00, 0x00, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0x55 };
 	//std::string mask = "xx?xxxxx??xx??x????xxx?xxxxx??xxxxxxxxxxxxx";
-	std::vector<byte> bPattern = { 0xff, 0x0e, 0x57, 0x8b, 0x7c, 0x00, 0x00, 0x8d, 0x74, 0x00, 0x00, 0xe8, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x5e, 0xb0, 0x00, 0x5b, 0x8b, 0xe5, 0x5d, 0xc2, 0x00, 0x00, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0x55 };
-	std::string mask = "xxxxx??xx??x????xxx?xxxxx??xxxxxxxxxxxxx";
-	Pat p(bPattern, mask);
+	//std::vector<byte> bPattern = { 0xff, 0x0e, 0x57, 0x8b, 0x7c, 0x00, 0x00, 0x8d, 0x74, 0x00, 0x00, 0xe8, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x5e, 0xb0, 0x00, 0x5b, 0x8b, 0xe5, 0x5d, 0xc2, 0x00, 0x00, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0x55 };
+	//std::string mask = "xxxxx??xx??x????xxx?xxxxx??xxxxxxxxxxxxx";
+	//Pat p(bPattern, mask);
 
-	Hack InfAmmo = tn->make.MakeInjectionHack(sInfAmmo, p, -3, szSize, vCaveData);
+	//Hack InfAmmo = tn->make.MakeInjectionHack(sInfAmmo, p, -3, szSize, vCaveData);
 
-	InfAmmo.SetHotkey(VK_NUMPAD1);
-	tn->AddOption(InfAmmo);
+	//InfAmmo.SetHotkey(VK_NUMPAD1);
+	//tn->AddOption(InfAmmo);
 
+	//while (true)
+	//{
+	//	tn->Update();
+	//	if (!tn->IsRunning())
+	//	{
+	//		system("cls");
+	//		puts("Searching for game...");
+	//		tn->ReInit();
+	//	}
+	//}
+	
+	Trainer * tn = &trainer;
+	Menu menu(*tn, "Traxo's Awesome Haxo");
+	menu.Init();
+	TrainerInitializer(tn);
+	menu.Update();
 	while (true)
 	{
-		tn->Update();
+		if (tn->Update()) //If you toggle a hack it returns true.
+			menu.Update();
 		if (!tn->IsRunning())
 		{
-			system("cls");
-			puts("Searching for game...");
+			menu.Update();
 			tn->ReInit();
+			menu.Update();
 		}
 	}
-	
+
 	system("pause");
 	return 0;
+}
+
+void TrainerInitializer(Trainer * tn)
+{
+	tn->Init(L"ac_client.exe");
+	static Hack InfAmmo = tn->make.MakePatchHack(L"Inf Ammo", 0x4637E9, 2);
+	InfAmmo.SetHotkey(VK_NUMPAD1);
+	tn->AddOption(InfAmmo);
 }
