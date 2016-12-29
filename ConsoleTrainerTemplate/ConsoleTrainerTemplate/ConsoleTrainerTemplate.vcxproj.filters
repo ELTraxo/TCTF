@@ -13,51 +13,66 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Menu">
+      <UniqueIdentifier>{018d1b9f-00f6-426b-a22a-43361cce710a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu">
+      <UniqueIdentifier>{5e9094c7-8173-439d-ac11-f2451fd42130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{1bf1bc28-953e-4a9b-994d-cb8655a94109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TCTF">
+      <UniqueIdentifier>{77c23a27-efdb-46b8-94f9-ceb2525b7d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TCTF">
+      <UniqueIdentifier>{aae796e0-a530-4030-a298-203ecf87342c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Memory.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Hack.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\TCTF</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>Source Files\TCTF</Filter>
     </ClCompile>
     <ClCompile Include="Trainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\TCTF</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Trainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Freeza.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Traxo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HexStr.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ConsoleColor.h">
+      <Filter>Header Files\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleColor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="HexStr.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Hack.h">
+      <Filter>Header Files\TCTF</Filter>
+    </ClInclude>
+    <ClInclude Include="includes.h">
+      <Filter>Header Files\TCTF</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Header Files\TCTF</Filter>
+    </ClInclude>
+    <ClInclude Include="Trainer.h">
+      <Filter>Header Files\TCTF</Filter>
+    </ClInclude>
+    <ClInclude Include="Freeza.h">
+      <Filter>Header Files\TCTF</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
