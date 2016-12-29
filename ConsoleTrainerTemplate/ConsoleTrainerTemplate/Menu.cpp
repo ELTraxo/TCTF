@@ -62,8 +62,8 @@ void Menu::Update()
 		{			
 			size_t len = lstrlenW(hack.GetName()) + 1;
 			char * hackName = new char[len];
-		
-			wcstombs(hackName, hack.GetName(), len);
+			size_t numOfCharConverted;
+			wcstombs_s(&numOfCharConverted, hackName, len, hack.GetName(), len);
 			if (hack.GetStatus())
 			{
 				std::cout << " " << hackName << "\t\t" << red << "On" << white << std::endl;
