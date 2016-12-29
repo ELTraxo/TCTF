@@ -40,6 +40,7 @@ public: //Inits, this is where hacks are added to the global freeze vec.
 public: //Getters
 	TCHAR* GetName();
 	HackType GetHackType();
+	bool GetStatus();
 
 	//Hotkey
 	void SetHotkey(int vKey);

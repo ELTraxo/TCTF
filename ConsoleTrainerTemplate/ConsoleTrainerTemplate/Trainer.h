@@ -19,6 +19,7 @@ public:
 		Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks);
 		Hack MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize);
 		Hack MakePatchHack(TCHAR * HackName, Pat & pPattern, UINT szSize);
+		Hack MakePatchHack(TCHAR * HackName, Pat & pPattern, int iPatternOffset, UINT szSize);
 		Hack MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData);
 		Hack MakeInjectionHack(TCHAR * HackName, Pat & pPattern, UINT szSize, std::vector<byte> vData);
 		Hack MakeInjectionHack(TCHAR * HackName, Pat & pPattern, int iPatternOffset, UINT szSize, std::vector<byte> vData);

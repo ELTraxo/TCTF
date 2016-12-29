@@ -65,6 +65,19 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pat & pPattern, UINT szSize)
 	return retHack;
 }
 
+Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pat & pPattern, int iPatternOffset, UINT szSize)
+{
+	char * cpPattern = new char[pPattern.pattern.size()];
+
+	for (UINT i = 0; i < pPattern.pattern.size(); i++)
+		cpPattern[i] = pPattern.mask[i];
+
+	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, (mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false) + iPatternOffset), szSize);
+
+	delete[] cpPattern;
+	return retHack;
+}
+
 Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData)
 {
 	byte * pData = new byte[vData.size()];

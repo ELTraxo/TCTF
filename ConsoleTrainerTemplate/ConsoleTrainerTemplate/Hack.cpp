@@ -144,6 +144,11 @@ HackType Hack::GetHackType()
 	return this->ht;
 }
 
+bool Hack::GetStatus()
+{
+	return bEnabled;
+}
+
 void Hack::SetHotkey(int vKey)
 {
 	iHotkey = vKey;
