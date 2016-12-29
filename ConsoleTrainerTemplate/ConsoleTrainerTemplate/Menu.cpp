@@ -1,5 +1,5 @@
 #include "Menu.h"
-
+#include "ConsoleColor.h"
 
 Menu::Menu(Trainer & tn)
 	:
@@ -46,7 +46,7 @@ void Menu::PrintFooter()
 {
 	int iLines = 24;
 	if (bHasHeader ) --iLines;
-	iLines -= TrainerOpts.size();
+	if (tn.IsReady()) { iLines -= TrainerOpts.size(); }
 	for (int x = 0; x < iLines; x++)
 		printf("\n");
 }
@@ -57,9 +57,22 @@ void Menu::Update()
 	if (tn.IsReady())
 	{
 		GetTrainerOpts();
-		std::cout << " " << sHeader << std::endl;
+		std::cout << " " << (tn.IsRunning() ? green : red) << sHeader << white << std::endl;
 		for each (Hack hack in TrainerOpts)
-			std::wcout << " " << hack.GetName() << "\t\t" << ((hack.GetStatus()) ? "On" : "Off") << std::endl;
+		{			
+			size_t len = lstrlenW(hack.GetName()) + 1;
+			char * hackName = new char[len];
+		
+			wcstombs(hackName, hack.GetName(), len);
+			if (hack.GetStatus())
+			{
+				std::cout << " " << hackName << "\t\t" << red << "On" << white << std::endl;
+			}
+			else
+			{
+				std::cout << " " << hackName << "\t\t" << "Off" << std::endl;
+			}
+		}
 	}
 	else
 	{
