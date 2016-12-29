@@ -326,7 +326,7 @@ Memory::Pattern::Pattern(Memory & mem)
 {
 }
 
-bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave)
+bool Memory::Pattern::CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave)
 {
 	SIZE_T pLen = strlen(mask);
 	for (UINT x = 0; x < szSize; x++)
@@ -344,7 +344,7 @@ bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, U
 			}
 			else
 			{
-				if (bArray[x + y] != 0x00 /*|| bArray[x + y] != 0x05 || bArray[x + y] != 0x0D || bArray[x + y] != 0x04 || bArray[x + y] != 0xCC*/)
+				if (bArray[x + y] != 0x00)
 				{
 					bFound = false;
 					break;
@@ -361,7 +361,7 @@ bool Memory::Pattern::CheckPattern(char * bArray, char * pattern, char * mask, U
 	return false;
 }
 
-uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask, bool bCodeCave)
+uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, const char * pattern, const char * mask, bool bCodeCave)
 {
 	UINT patternOffset = 0;
 	char * bArray;
@@ -428,7 +428,7 @@ uintptr_t Memory::Pattern::GetModuleBase(TCHAR * pModName)
 		return uintptr_t(NULL);
 }
 
-uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave)
+uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, const char * pattern, const char * mask, bool bCodeCave)
 {
 	if (GetModule(pModName))
 	{
@@ -438,7 +438,7 @@ uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, char * pattern, char * m
 		return uintptr_t(NULL);
 }
 
-uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask, bool bCodeCave)
+uintptr_t Memory::Pattern::ScanProcess(const char * pattern, const char * mask, bool bCodeCave)
 {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
 	MODULEENTRY32 modEntry = { 0 };
@@ -448,11 +448,23 @@ uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask, bool bCodeCa
 		modEntry.dwSize = sizeof(MODULEENTRY32);
 		if (Module32First(hSnapshot, &modEntry))
 		{
-			uintptr_t pAddress = Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
+			uintptr_t pAddress = this->Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
 			if (pAddress != uintptr_t(0))
 			{
 				CloseHandle(hSnapshot);
 				return pAddress;
+			}
+			else
+			{
+				while (Module32Next(hSnapshot, &modEntry))
+				{
+					pAddress = this->Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
+					if (pAddress != uintptr_t(0))
+					{
+						CloseHandle(hSnapshot);
+						return pAddress;
+					}
+				}
 			}
 		}
 	}
@@ -460,7 +472,7 @@ uintptr_t Memory::Pattern::ScanProcess(char * pattern, char * mask, bool bCodeCa
 	return uintptr_t(0);
 }
 
-uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UWORD szSize)
+uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UINT szSize)
 {
 	char * pPattern = new char[szSize];
 	char * pMask = new char[szSize];

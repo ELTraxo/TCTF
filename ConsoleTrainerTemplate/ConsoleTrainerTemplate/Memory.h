@@ -31,18 +31,6 @@ public:
 	UINT ofCount;
 };
 
-class Pattern
-{
-public:
-	Pattern(byte * pattern, std::string mask)
-	{
-		this->pattern = pattern;
-		this->mask = mask;
-	}
-	byte * pattern;
-	std::string mask;
-};
-
 class Hack;
 
 class Memory
@@ -93,18 +81,18 @@ public:
 	{
 	public:
 		Pattern(Memory & mem);
-		bool CheckPattern(char * bArray, char * pattern, char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave);
-		uintptr_t Scan(UINT uiBegin, UINT uiEnd, char * pattern, char * mask, bool bCodeCave);
+		bool CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave);
+		uintptr_t Scan(UINT uiBegin, UINT uiEnd, const char * pattern, const char * mask, bool bCodeCave);
 		bool GetModule(TCHAR * pModName);
 		uintptr_t GetModuleBase(TCHAR * pModName);
-		uintptr_t ScanModule(TCHAR * pModName, char * pattern, char * mask, bool bCodeCave);
-		uintptr_t ScanProcess(char * pattern, const char * mask, bool bCodeCave);
+		uintptr_t ScanModule(TCHAR * pModName, const char * pattern, const char * mask, bool bCodeCave);
+		uintptr_t ScanProcess(const char * pattern, const char * mask, bool bCodeCave);
 
 	private:
 		Memory & mem;
 	}pattern;
 	
-	uintptr_t ScanForCodeCave(uintptr_t pStart, UWORD szSize);
+	uintptr_t ScanForCodeCave(uintptr_t pStart, UINT szSize);
 
 private:
 	TCHAR * wcsGameName = nullptr;
@@ -117,3 +105,17 @@ public:
 };
 
 void FreezeThread(Memory & mem);
+
+class Pat
+{
+public:
+	Pat(std::vector<byte> & pattern, std::string & mask)
+		:
+		pattern(pattern),
+		mask(mask)
+	{
+	}
+
+	std::vector<byte> & pattern;
+	std::string  mask;
+};
