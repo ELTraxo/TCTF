@@ -11,6 +11,7 @@ public:
 	void AddHeader(std::string sHeader);
 	void GetTrainerOpts();
 	void PrintFooter();
+	std::string ParseHotkey(int hotKey);
 	void Update();
 
 private:
