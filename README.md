@@ -8,3 +8,5 @@ Cause you're a lazy fuck and want to make a trainer.
 
 ###How the fuck do I use this.
 Check out the example repo. (https://github.com/ELTraxo/TCTF-AC)
+
+PS: Compile according to your target (x86/x64).
