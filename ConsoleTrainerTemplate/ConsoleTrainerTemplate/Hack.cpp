@@ -256,6 +256,7 @@ void Hack::HookInit()
 
 void Hack::WriteCaveData()
 {
+	int addySize = sizeof(uintptr_t);
 	//Actual cave data
 	byte * pData = new byte[vCaveData.size()];
 	for (UINT x = 0; x < vCaveData.size(); x++)
@@ -267,17 +268,17 @@ void Hack::WriteCaveData()
 	delete[] pData;
 
 	// rest of this is for the jump back.
-	uintptr_t destJumpBackAddy = pAddress - (pCaveAddress + vCaveData.size());
-	byte * pAddy = new byte[4];
+	uintptr_t destJumpBackAddy = pAddress + (szSize - 5) - (pCaveAddress + vCaveData.size());
+	byte * pAddy = new byte[addySize];
 	mem.ParseAddress(destJumpBackAddy, pAddy);
 
-	byte destJumpBack[5];
+	byte * destJumpBack = new byte[addySize];
 
 	destJumpBack[0] = 0xE9;
 	int y = 1;
-	for (int x = 4; x > 0; x--)
+	for (int x = addySize; x > 0; x--)
 	{
-		if (x == 4)
+		if (x == addySize)
 			destJumpBack[x] = pAddy[x - x];
 		else
 		{
@@ -285,25 +286,30 @@ void Hack::WriteCaveData()
 			y++;
 		}
 	}
-	delete[] pAddy;
-
-	mem.write.WriteBytes(pCaveAddress + vCaveData.size(), destJumpBack, 5);
+	//delete[] pAddy;
+	byte dstJmpBack[5] = { 0 };
+	for (int x = 0; x < 5; x++)
+		dstJmpBack[x] = destJumpBack[x];
+	
+	mem.write.WriteBytes(pCaveAddress + vCaveData.size(), dstJmpBack, 5);
+	pAddy = NULL;
 }
 
 void Hack::WriteJmp2Cave()
 {
+	int addySize = sizeof(uintptr_t);
 	byte * srcJump = new byte[szSize];
 	srcJump[0] = 0xE9;
 	uintptr_t srcToCaveJump = (pCaveAddress - pAddress - 5);
-	byte pCave[4];
+	byte pCave[sizeof(uintptr_t)];
 	mem.ParseAddress(srcToCaveJump, pCave);
 
 	int y = 1;
-	if (srcToCaveJump > INT_MAX)
+	if (srcToCaveJump > (sizeof(uintptr_t) > 4) ? INT64_MAX : INT_MAX)
 	{
-		for (int x = 4; x > 0; x--)
+		for (int x = addySize; x > 0; x--)
 		{
-			if (x == 4)
+			if (x == addySize)
 				srcJump[x] = pCave[x - x];
 			else
 			{
@@ -320,8 +326,15 @@ void Hack::WriteJmp2Cave()
 			srcJump[x] = pCave[x - 1];
 		}
 	}
+
+	for (UINT x = 0; x < addySize; x++)
+	{
+		if (x > 4)
+			srcJump[x] = 0x90;
+	}
+
 	mem.write.WriteBytes(pAddress, srcJump, szSize);
-	delete[] srcJump;
+	srcJump = NULL;
 }
 
 void Hack::ToggleInjection()

@@ -138,22 +138,39 @@ void Memory::ParseAddress(uintptr_t pAddress, byte * pBytesArr)
 	std::stringstream ss(sAddress);
 	ss << std::hex << pAddress;
 	ss >> sAddy;
-	if (sAddy.length() < 8)
-	{
-		std::string buff = "";// = std::string(sAddy);
-		for (UINT x = 0; x < (8 - sAddy.length()); x++)
-		{
-			buff += "0";
-		}
-		buff += sAddy;
-		sAddy = buff;
-	}
 
-	byte pAddyBytes[4];
+	if (sizeof(uintptr_t) == 4)
+	{
+		if (sAddy.length() < 7)
+		{
+			std::string buff = "";// = std::string(sAddy);
+			for (UINT x = 0; x < (8 - sAddy.length()); x++)
+			{
+				buff += "0";
+			}
+			buff += sAddy;
+			sAddy = buff;
+		}
+	}
+	else
+	{
+		if (sAddy.length() < 15)
+		{
+			std::string buff = "";// = std::string(sAddy);
+			for (UINT x = 0; x < (16 - sAddy.length()); x++)
+			{
+				buff += "0";
+			}
+			buff += sAddy;
+			sAddy = buff;
+		}
+	}
+	byte pAddyBytes[sizeof(uintptr_t)];
+
 	
 	hex2bin(sAddy.c_str(), (char*)pAddyBytes);
 	//pBytesArr = new byte[4];
-	memcpy(pBytesArr, pAddyBytes, 4);
+	memcpy(pBytesArr, pAddyBytes, sizeof(uintptr_t));
 }
 
 uintptr_t Memory::EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count)

@@ -66,12 +66,13 @@ private:
 	bool bEnabled = false;
 	int iHotkey = 0;
 
-	//for code patch and maybe hooking hacks
+	//for code patch and hooking hacks
 	uintptr_t pAddress = NULL;
 	uintptr_t pCaveAddress = NULL;
 	UINT szSize = NULL;
 	std::vector<byte> vOldBytes;
 	std::vector<byte> vCaveData;
+	DWORD dwOldProtection = NULL;
 
 	//for pointer based hacks.
 	uintptr_t pBase = NULL;
