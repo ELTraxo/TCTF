@@ -66,7 +66,7 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pat & pPattern, UINT szSize)
 	char * cpPattern = new char[pPattern.pattern.size()];
 	
 	for (UINT i = 0; i < pPattern.pattern.size(); i++)
-		cpPattern[i] = pPattern.mask[i];
+		cpPattern[i] = pPattern.pattern[i];
 
 	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false), szSize);
 
@@ -79,7 +79,7 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pat & pPattern, int iPattern
 	char * cpPattern = new char[pPattern.pattern.size()];
 
 	for (UINT i = 0; i < pPattern.pattern.size(); i++)
-		cpPattern[i] = pPattern.mask[i];
+		cpPattern[i] = pPattern.pattern[i];
 
 	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, (mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false) + iPatternOffset), szSize);
 

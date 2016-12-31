@@ -326,13 +326,13 @@ Memory::Pattern::Pattern(Memory & mem)
 {
 }
 
-bool Memory::Pattern::CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave)
+bool Memory::Pattern::CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, uintptr_t & patternOffset, bool bCodeCave)
 {
 	SIZE_T pLen = strlen(mask);
-	for (UINT x = 0; x < szSize; x++)
+	for (uintptr_t x = 0; x < szSize; x++)
 	{
 		bool bFound = true;
-		for (UINT y = 0; y < pLen; y++)
+		for (uintptr_t y = 0; y < pLen; y++)
 		{
 			if (!bCodeCave) 
 			{
@@ -361,9 +361,9 @@ bool Memory::Pattern::CheckPattern(char * bArray, const char * pattern, const ch
 	return false;
 }
 
-uintptr_t Memory::Pattern::Scan(UINT uiBegin, UINT uiEnd, const char * pattern, const char * mask, bool bCodeCave)
+uintptr_t Memory::Pattern::Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char * pattern, const char * mask, bool bCodeCave)
 {
-	UINT patternOffset = 0;
+	uintptr_t patternOffset = 0;
 	char * bArray;
 	bool bFound = false;
 	while (uiBegin < uiEnd)
@@ -432,7 +432,7 @@ uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, const char * pattern, co
 {
 	if (GetModule(pModName))
 	{
-		return Scan((UINT)mem.me32.modBaseAddr, (UINT)(mem.me32.modBaseAddr + mem.me32.modBaseSize), pattern, mask, bCodeCave);
+		return Scan((uintptr_t)mem.me32.modBaseAddr, (uintptr_t)(mem.me32.modBaseAddr + mem.me32.modBaseSize), pattern, mask, bCodeCave);
 	}
 	else
 		return uintptr_t(NULL);
@@ -448,7 +448,7 @@ uintptr_t Memory::Pattern::ScanProcess(const char * pattern, const char * mask, 
 		modEntry.dwSize = sizeof(MODULEENTRY32);
 		if (Module32First(hSnapshot, &modEntry))
 		{
-			uintptr_t pAddress = this->Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
+			uintptr_t pAddress = this->Scan((uintptr_t)modEntry.modBaseAddr, (uintptr_t)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
 			if (pAddress != uintptr_t(0))
 			{
 				CloseHandle(hSnapshot);
@@ -458,7 +458,7 @@ uintptr_t Memory::Pattern::ScanProcess(const char * pattern, const char * mask, 
 			{
 				while (Module32Next(hSnapshot, &modEntry))
 				{
-					pAddress = this->Scan((UINT)modEntry.modBaseAddr, (UINT)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
+					pAddress = this->Scan((uintptr_t)modEntry.modBaseAddr, (uintptr_t)(modEntry.modBaseAddr + modEntry.modBaseSize), pattern, mask, bCodeCave);
 					if (pAddress != uintptr_t(0))
 					{
 						CloseHandle(hSnapshot);

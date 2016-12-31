@@ -81,8 +81,8 @@ public:
 	{
 	public:
 		Pattern(Memory & mem);
-		bool CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, UINT & patternOffset, bool bCodeCave);
-		uintptr_t Scan(UINT uiBegin, UINT uiEnd, const char * pattern, const char * mask, bool bCodeCave);
+		bool CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, uintptr_t & patternOffset, bool bCodeCave);
+		uintptr_t Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char * pattern, const char * mask, bool bCodeCave);
 		bool GetModule(TCHAR * pModName);
 		uintptr_t GetModuleBase(TCHAR * pModName);
 		uintptr_t ScanModule(TCHAR * pModName, const char * pattern, const char * mask, bool bCodeCave);

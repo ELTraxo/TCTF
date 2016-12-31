@@ -42,6 +42,9 @@
     <ClCompile Include="Trainer.cpp">
       <Filter>Source Files\TCTF</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Traxo.h">
