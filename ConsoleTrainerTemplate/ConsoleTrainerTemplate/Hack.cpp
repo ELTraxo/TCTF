@@ -107,7 +107,7 @@ void Hack::InitHackAndAddress(TCHAR * HackName, HackType ht, ValType vt, uintptr
 	this->ht = ht;
 	this->vt = vt;
 	this->pAddress = pAddress;
-	if(ht != HackType::CODEPATCH || ht != HackType::HOOK)
+	if(ht == HackType::VALFREEZE || ht == HackType::VALWRITE)
 		AddHackToVec();
 }
 
@@ -119,7 +119,7 @@ void Hack::InitHackAndPointer(TCHAR * HackName, HackType ht, ValType vt, uintptr
 	this->pBase = pBase;
 	this->pOffsets = Offsets;
 	this->ucOffsetCount = count;
-	if (ht != HackType::CODEPATCH || ht != HackType::HOOK)
+	if (ht == HackType::VALFREEZE || ht == HackType::VALWRITE)
 		AddHackToVec();
 }
 
