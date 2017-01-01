@@ -28,7 +28,7 @@ public:
 
 	uintptr_t pBase;
 	UINT * pOffsets;
-	UINT ofCount;
+	size_t ofCount;
 };
 
 class Hack;
@@ -92,7 +92,7 @@ public:
 		Memory & mem;
 	}pattern;
 	
-	uintptr_t ScanForCodeCave(uintptr_t pStart, UINT szSize);
+	uintptr_t ScanForCodeCave(uintptr_t pStart, size_t szSize);
 
 private:
 	TCHAR * wcsGameName = nullptr;

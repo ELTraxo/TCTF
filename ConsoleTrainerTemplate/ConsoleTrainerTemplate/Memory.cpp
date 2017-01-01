@@ -489,7 +489,7 @@ uintptr_t Memory::Pat::ScanProcess(const char * pattern, const char * mask, bool
 	return uintptr_t(0);
 }
 
-uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, UINT szSize)
+uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, size_t szSize)
 {
 	char * pPattern = new char[szSize];
 	char * pMask = new char[szSize];

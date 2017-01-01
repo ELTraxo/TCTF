@@ -1,7 +1,7 @@
 #include "includes.h"
 
 // code patch ctor
-Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize)
+Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, size_t szSize)
 	:
 	mem(mem),
 	pGVHacks(std::vector<std::reference_wrapper<Hack>>()) //Don't really need a ref to the global hacks vec
@@ -11,7 +11,7 @@ Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT
 }
 
 // code injection ctor
-Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize, byte * pData, UINT iCaveSize)
+Hack::Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, size_t szSize, byte * pData, UINT iCaveSize)
 	:
 	mem(mem),
 	pGVHacks(std::vector<std::reference_wrapper<Hack>>())
@@ -297,7 +297,7 @@ void Hack::WriteCaveData()
 
 void Hack::WriteJmp2Cave()
 {
-	int addySize = sizeof(uintptr_t);
+	UINT addySize = sizeof(uintptr_t);
 	byte * srcJump = new byte[szSize];
 	srcJump[0] = 0xE9;
 	uintptr_t srcToCaveJump = (pCaveAddress - pAddress - 5);
@@ -305,7 +305,7 @@ void Hack::WriteJmp2Cave()
 	mem.ParseAddress(srcToCaveJump, pCave);
 
 	int y = 1;
-	if (srcToCaveJump > (sizeof(uintptr_t) > 4) ? INT64_MAX : INT_MAX)
+	if (srcToCaveJump > (uintptr_t)(sizeof(uintptr_t) > 4) ? INT64_MAX : INT_MAX)
 	{
 		for (int x = addySize; x > 0; x--)
 		{

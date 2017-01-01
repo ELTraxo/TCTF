@@ -15,7 +15,7 @@ public:
 	void Init(TCHAR * GameName);
 	void ReInit();
 	bool IsReady();
-
+	static void FreezeThread(Memory & mem, std::vector<std::reference_wrapper<Hack>> * GHackVec);
 public:
 	class Make
 	{

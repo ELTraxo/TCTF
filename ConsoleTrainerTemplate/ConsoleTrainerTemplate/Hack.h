@@ -15,10 +15,10 @@ class Hack
 {
 public: //ctors
 	// code patch ctor
-	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize);
+	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, size_t szSize);
 
 	// code injection ctor
-	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, UINT szSize, byte * pData, UINT iCaveSize);
+	Hack(TCHAR * HackName, Memory & mem, HackType ht, uintptr_t pAddress, size_t szSize, byte * pData, UINT iCaveSize);
 
 	// val write/freeze ctors
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int value);
@@ -69,7 +69,7 @@ private:
 	//for code patch and hooking hacks
 	uintptr_t pAddress = NULL;
 	uintptr_t pCaveAddress = NULL;
-	UINT szSize = NULL;
+	size_t szSize = NULL;
 	std::vector<byte> vOldBytes;
 	std::vector<byte> vCaveData;
 	DWORD dwOldProtection = NULL;

@@ -1,6 +1,6 @@
 #include "Trainer.h"
 
-void FreezeThread(Memory & mem, std::vector<std::reference_wrapper<Hack>> * GHackVec)
+void Trainer::FreezeThread(Memory & mem, std::vector<std::reference_wrapper<Hack>> * GHackVec)
 {
 	static auto tpDelay = std::chrono::steady_clock::now();
 	auto tpNow = std::chrono::steady_clock::now();
@@ -53,7 +53,7 @@ void Trainer::Init()
 	mem.Init(GameName);
 	bInitted = true;
 	bSearching = false;
-
+	//void * frThred = &FreezeThread;
 	// Freeze values thread
 	std::thread tr(&FreezeThread, this->mem, &this->pGVHacks);
 	tr.detach();
