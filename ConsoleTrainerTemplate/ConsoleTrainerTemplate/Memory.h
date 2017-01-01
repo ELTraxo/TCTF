@@ -77,10 +77,10 @@ public:
 		Memory & mem;
 	}write;
 	
-	class Pattern
+	class Pat
 	{
 	public:
-		Pattern(Memory & mem);
+		Pat(Memory & mem);
 		bool CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, uintptr_t & patternOffset, bool bCodeCave);
 		uintptr_t Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char * pattern, const char * mask, bool bCodeCave);
 		bool GetModule(TCHAR * pModName);
@@ -106,16 +106,16 @@ public:
 
 void FreezeThread(Memory & mem);
 
-class Pat
+class Pattern
 {
 public:
-	Pat(std::vector<byte> & pattern, std::string & mask)
+	Pattern(std::vector<byte> & pattern, std::string & mask)
 		:
-		pattern(pattern),
-		mask(mask)
+		vPattern(pattern),
+		sMask(mask)
 	{
 	}
 
-	std::vector<byte> & pattern;
-	std::string  mask;
+	std::vector<byte> & vPattern;
+	std::string  sMask;
 };

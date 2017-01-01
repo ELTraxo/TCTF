@@ -337,13 +337,13 @@ bool Memory::Write::WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szS
 	}
 }
 
-Memory::Pattern::Pattern(Memory & mem)
+Memory::Pat::Pat(Memory & mem)
 	:
 	mem(mem)
 {
 }
 
-bool Memory::Pattern::CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, uintptr_t & patternOffset, bool bCodeCave)
+bool Memory::Pat::CheckPattern(char * bArray, const char * pattern, const char * mask, UINT szSize, uintptr_t & patternOffset, bool bCodeCave)
 {
 	SIZE_T pLen = strlen(mask);
 	for (uintptr_t x = 0; x < szSize; x++)
@@ -378,7 +378,7 @@ bool Memory::Pattern::CheckPattern(char * bArray, const char * pattern, const ch
 	return false;
 }
 
-uintptr_t Memory::Pattern::Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char * pattern, const char * mask, bool bCodeCave)
+uintptr_t Memory::Pat::Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char * pattern, const char * mask, bool bCodeCave)
 {
 	uintptr_t patternOffset = 0;
 	char * bArray;
@@ -412,7 +412,7 @@ uintptr_t Memory::Pattern::Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char *
 	return uintptr_t(uiBegin + patternOffset);
 }
 
-bool Memory::Pattern::GetModule(TCHAR * pModName)
+bool Memory::Pat::GetModule(TCHAR * pModName)
 {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
 	MODULEENTRY32 modEntry;
@@ -437,7 +437,7 @@ bool Memory::Pattern::GetModule(TCHAR * pModName)
 	return false;
 }
 
-uintptr_t Memory::Pattern::GetModuleBase(TCHAR * pModName)
+uintptr_t Memory::Pat::GetModuleBase(TCHAR * pModName)
 {
 	if (GetModule(pModName))
 		return uintptr_t(mem.me32.modBaseAddr);
@@ -445,7 +445,7 @@ uintptr_t Memory::Pattern::GetModuleBase(TCHAR * pModName)
 		return uintptr_t(NULL);
 }
 
-uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, const char * pattern, const char * mask, bool bCodeCave)
+uintptr_t Memory::Pat::ScanModule(TCHAR * pModName, const char * pattern, const char * mask, bool bCodeCave)
 {
 	if (GetModule(pModName))
 	{
@@ -455,7 +455,7 @@ uintptr_t Memory::Pattern::ScanModule(TCHAR * pModName, const char * pattern, co
 		return uintptr_t(NULL);
 }
 
-uintptr_t Memory::Pattern::ScanProcess(const char * pattern, const char * mask, bool bCodeCave)
+uintptr_t Memory::Pat::ScanProcess(const char * pattern, const char * mask, bool bCodeCave)
 {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mem.pID);
 	MODULEENTRY32 modEntry = { 0 };

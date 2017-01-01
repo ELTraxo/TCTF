@@ -61,27 +61,27 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 	return Hack(HackName, mem, HackType::CODEPATCH, (uintptr_t)pAddress, szSize);
 }
 
-Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pat & pPattern, UINT szSize)
+Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pattern & pPattern, UINT szSize)
 {	
-	char * cpPattern = new char[pPattern.pattern.size()];
+	char * cpPattern = new char[pPattern.vPattern.size()];
 	
-	for (UINT i = 0; i < pPattern.pattern.size(); i++)
-		cpPattern[i] = pPattern.pattern[i];
+	for (UINT i = 0; i < pPattern.vPattern.size(); i++)
+		cpPattern[i] = pPattern.vPattern[i];
 
-	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false), szSize);
+	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, mem.pattern.ScanProcess(cpPattern, (char*)pPattern.sMask.c_str(), false), szSize);
 
 	delete[] cpPattern;
 	return retHack;
 }
 
-Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pat & pPattern, int iPatternOffset, UINT szSize)
+Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pattern & pPattern, int iPatternOffset, UINT szSize)
 {
-	char * cpPattern = new char[pPattern.pattern.size()];
+	char * cpPattern = new char[pPattern.vPattern.size()];
 
-	for (UINT i = 0; i < pPattern.pattern.size(); i++)
-		cpPattern[i] = pPattern.pattern[i];
+	for (UINT i = 0; i < pPattern.vPattern.size(); i++)
+		cpPattern[i] = pPattern.vPattern[i];
 
-	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, (mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false) + iPatternOffset), szSize);
+	Hack retHack = Hack(HackName, mem, HackType::CODEPATCH, (mem.pattern.ScanProcess(cpPattern, (char*)pPattern.sMask.c_str(), false) + iPatternOffset), szSize);
 
 	delete[] cpPattern;
 	return retHack;
@@ -100,18 +100,18 @@ Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSi
 	return hack;
 }
 
-Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pat & pPattern, UINT szSize, std::vector<byte> vData)
+Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, UINT szSize, std::vector<byte> vData)
 {
 	byte * pData = new byte[vData.size()];
-	char * cpPattern = new char[pPattern.pattern.size()];
+	char * cpPattern = new char[pPattern.vPattern.size()];
 
 	for (UINT x = 0; x < vData.size(); x++)
 		pData[x] = vData[x];
 
-	for (UINT i = 0; i < pPattern.pattern.size(); i++)
-		cpPattern[i] = pPattern.pattern[i];
+	for (UINT i = 0; i < pPattern.vPattern.size(); i++)
+		cpPattern[i] = pPattern.vPattern[i];
 
-	Hack retHack = Hack(HackName, mem, HackType::HOOK, mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false), szSize, pData, vData.size());
+	Hack retHack = Hack(HackName, mem, HackType::HOOK, mem.pattern.ScanProcess(cpPattern, (char*)pPattern.sMask.c_str(), false), szSize, pData, vData.size());
 	
 	delete[] pData;
 	delete[] cpPattern;
@@ -119,18 +119,18 @@ Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pat & pPattern, UINT szS
 	return retHack;
 }
 
-Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pat & pPattern, int iPatternOffset, UINT szSize, std::vector<byte> vData)
+Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, int iPatternOffset, UINT szSize, std::vector<byte> vData)
 {
 	byte * pData = new byte[vData.size()];
-	char * cpPattern = new char[pPattern.pattern.size()];
+	char * cpPattern = new char[pPattern.vPattern.size()];
 
 	for (UINT x = 0; x < vData.size(); x++)
 		pData[x] = vData[x];
 
-	for (UINT i = 0; i < pPattern.pattern.size(); i++)
-		cpPattern[i] = pPattern.pattern[i];
+	for (UINT i = 0; i < pPattern.vPattern.size(); i++)
+		cpPattern[i] = pPattern.vPattern[i];
 
-	Hack retHack = Hack(HackName, mem, HackType::HOOK, (mem.pattern.ScanProcess(cpPattern, (char*)pPattern.mask.c_str(), false) + iPatternOffset), szSize, pData, vData.size());
+	Hack retHack = Hack(HackName, mem, HackType::HOOK, (mem.pattern.ScanProcess(cpPattern, (char*)pPattern.sMask.c_str(), false) + iPatternOffset), szSize, pData, vData.size());
 
 	delete[] pData;
 	delete[] cpPattern;
