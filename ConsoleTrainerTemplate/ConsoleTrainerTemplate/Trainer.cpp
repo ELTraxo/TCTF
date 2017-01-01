@@ -1,19 +1,47 @@
 #include "Trainer.h"
 
-Trainer::Trainer(std::vector<std::reference_wrapper<Hack>> & GHackVec)
+void FreezeThread(Memory & mem, std::vector<std::reference_wrapper<Hack>> * GHackVec)
+{
+	static auto tpDelay = std::chrono::steady_clock::now();
+	auto tpNow = std::chrono::steady_clock::now();
+
+	while (!mem.GetProcDeathVar())
+	{
+		tpNow = std::chrono::steady_clock::now();
+		std::chrono::duration<float> check = tpNow - tpDelay;
+		if (check.count() >= 0.01f)
+		{
+			if (!GHackVec->empty())
+			{
+				for each(Hack hack in *GHackVec)
+				{
+					hack.WriteValue();
+				}
+			}
+		}
+	}
+}
+
+Trainer::Trainer()
 	:
-	pGVHacks(GHackVec),
-	make(this->mem, GHackVec)
+	make(this->mem, this->pGVHacks)
 {
 }
 
-Trainer::Trainer(TCHAR * GameName, std::vector<std::reference_wrapper<Hack>> & GHackVec)
-	:
-	pGVHacks(GHackVec),
-	make(this->mem, GHackVec)
-{
-	this->GameName = GameName;
-}
+//Trainer::Trainer(std::vector<std::reference_wrapper<Hack>> & GHackVec)
+//	:
+//	pGVHacks(GHackVec),
+//	make(this->mem, GHackVec)
+//{
+//}
+//
+//Trainer::Trainer(TCHAR * GameName, std::vector<std::reference_wrapper<Hack>> & GHackVec)
+//	:
+//	pGVHacks(GHackVec),
+//	make(this->mem, GHackVec)
+//{
+//	this->GameName = GameName;
+//}
 
 Trainer::~Trainer()
 {
@@ -25,6 +53,10 @@ void Trainer::Init()
 	mem.Init(GameName);
 	bInitted = true;
 	bSearching = false;
+
+	// Freeze values thread
+	std::thread tr(&FreezeThread, this->mem, &this->pGVHacks);
+	tr.detach();
 }
 
 void Trainer::Init(TCHAR * GameName)
@@ -48,6 +80,12 @@ bool Trainer::IsReady()
 {
 	return bInitted;
 }
+
+//Trainer::Make::Make(Memory & mem)
+//	:
+//	mem(mem)
+//{
+//}
 
 Trainer::Make::Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks)
 	:

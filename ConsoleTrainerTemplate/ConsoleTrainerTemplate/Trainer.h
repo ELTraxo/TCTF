@@ -7,8 +7,9 @@ class Menu;
 class Trainer
 {
 public:
-	Trainer(std::vector<std::reference_wrapper<Hack>> & GHackVec);
-	Trainer(TCHAR * GameName, std::vector<std::reference_wrapper<Hack>> & GHackVec);
+	Trainer();
+	//Trainer(std::vector<std::reference_wrapper<Hack>> & GHackVec);
+	//Trainer(TCHAR * GameName, std::vector<std::reference_wrapper<Hack>> & GHackVec);
 	~Trainer();
 	void Init();
 	void Init(TCHAR * GameName);
@@ -19,6 +20,7 @@ public:
 	class Make
 	{
 	public:
+		//Make(Memory & mem);
 		Make(Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks);
 		Hack MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize);
 		Hack MakePatchHack(TCHAR * HackName, Pattern & pPattern, UINT szSize);
@@ -64,7 +66,7 @@ private:
 	bool bInitted = false;
 	bool bSearching = false;
 	std::vector<std::reference_wrapper<Hack>> Options; //All options
-	std::vector<std::reference_wrapper<Hack>> & pGVHacks; //All val freeze opts
+	std::vector<std::reference_wrapper<Hack>> pGVHacks; //All val freeze opts
 	
 	//key press related
 	std::chrono::steady_clock::time_point keyTimer = std::chrono::steady_clock::now();

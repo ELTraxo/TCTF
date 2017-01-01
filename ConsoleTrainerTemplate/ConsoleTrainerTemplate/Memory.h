@@ -104,7 +104,7 @@ public:
 	bool ProcDied = false;
 };
 
-void FreezeThread(Memory & mem);
+//void FreezeThread(Memory & mem);
 
 class Pattern
 {

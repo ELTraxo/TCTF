@@ -38,8 +38,8 @@ void Memory::Init()
 		}
 
 		// Freeze values thread
-		std::thread tr(&FreezeThread, *this);
-		tr.detach();
+		//std::thread tr(&FreezeThread, *this);
+		//tr.detach();
 	}
 	else
 	{

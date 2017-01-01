@@ -71,8 +71,5 @@
     <ClInclude Include="Trainer.h">
       <Filter>Header Files\TCTF</Filter>
     </ClInclude>
-    <ClInclude Include="Freeza.h">
-      <Filter>Header Files\TCTF</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

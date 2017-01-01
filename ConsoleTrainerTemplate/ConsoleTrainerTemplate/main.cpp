@@ -5,19 +5,19 @@ void TrainerInitializer(Trainer * tn);
 
 int main()
 {	
-	Trainer * tn = &trainer;
-	Menu menu(*tn, "Traxo's Awesome Haxo");
+	Trainer trainer = Trainer();
+	Menu menu(trainer, "Traxo's Awesome Haxo");
 	menu.Init();
-	TrainerInitializer(tn);
+	TrainerInitializer(&trainer);
 	menu.Update();
 	while (true)
 	{
-		if (tn->Update()) //If you toggle a hack it returns true.
+		if (trainer.Update()) //If you toggle a hack it returns true.
 			menu.Update();
-		if (!tn->IsRunning())
+		if (!trainer.IsRunning())
 		{
 			menu.Update();
-			tn->ReInit();
+			trainer.ReInit();
 			menu.Update();
 		}
 	}
@@ -37,7 +37,7 @@ void TrainerInitializer(Trainer * tn)
 	//tn->AddOption(InfAmmo);
 
 	//Pointer pHealth = Pointer(0x50f4f4, std::vector<UINT>{0x358, 0x48, 0x1e8, 0x8, 0xf8});
-	//static Hack InfHealth = tn->make.MakeFreezePtrHack(L"Inf Health", pHealth, 150);
+	//static Hack InfHealth = tn->make.MakeFreezePtrHack(L"Inf Health", pHealth, 999);
 	//InfHealth.SetHotkey(VK_NUMPAD2);
 	//tn->AddOption(InfHealth);
 

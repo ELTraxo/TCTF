@@ -143,7 +143,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleColor.h" />
-    <ClInclude Include="Freeza.h" />
     <ClInclude Include="Hack.h" />
     <ClInclude Include="HexStr.h" />
     <ClInclude Include="includes.h" />

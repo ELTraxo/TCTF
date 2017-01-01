@@ -1,9 +1,8 @@
 #pragma once
 #include "Trainer.h"
-#include "Freeza.h"
 #include "Menu.h"
 
-Trainer trainer(GHackVec);
+//Trainer trainer(GHackVec);
 
 /*
 Hello, thank you for taking a gander at this piece of shit.
