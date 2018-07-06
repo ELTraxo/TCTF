@@ -1,10 +1,9 @@
 #include "Traxo.h"
 
-
 void TrainerInitializer(Trainer * tn);
 
 int main()
-{	
+{
 	Trainer trainer = Trainer();
 	Menu menu(trainer, "Traxo's Awesome Haxo");
 	menu.Init();
@@ -20,6 +19,7 @@ int main()
 			trainer.ReInit();
 			menu.Update();
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 
 	system("pause");
@@ -36,8 +36,8 @@ void TrainerInitializer(Trainer * tn)
 	InfAmmo.SetHotkey(VK_NUMPAD1);
 	tn->AddOption(InfAmmo);
 
-	Pointer pHealth = Pointer(0x50f4f4, std::vector<UINT>{0x358, 0x48, 0x1e8, 0x8, 0xf8});
-	static Hack InfHealth = tn->make.MakeFreezePtrHack(L"Inf Health", pHealth, 999);
+	Pointer pHealth = Pointer(0x50f4f4, std::vector<UINT>{0xf8});
+	static Hack InfHealth = tn->make.MakeFreezePtrHack(L"Inf Health", pHealth, 150);
 	InfHealth.SetHotkey(VK_NUMPAD2);
 	tn->AddOption(InfHealth);
 

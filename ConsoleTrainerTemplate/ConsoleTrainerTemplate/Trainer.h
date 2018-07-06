@@ -28,7 +28,7 @@ public:
 		Hack MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData);
 		Hack MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, UINT szSize, std::vector<byte> vData);
 		Hack MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, int iPatternOffset, UINT szSize, std::vector<byte> vData);
-		
+
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, int64_t value);
 		Hack MakeFreezeHack(TCHAR * HackName, uintptr_t pAddress, float value);
@@ -43,7 +43,7 @@ public:
 		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, int64_t value);
 		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, float value);
 		Hack MakeWriteValHack(TCHAR * HackName, uintptr_t pAddress, double value);
-				 
+
 		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, int value);
 		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, int64_t value);
 		Hack MakeWriteValPtrHack(TCHAR * HackName, Pointer ptr, float value);
@@ -54,7 +54,7 @@ public:
 		std::vector<std::reference_wrapper<Hack>> & pGVHacks;
 	}make;
 
-public:	
+public:
 	void AddOption(Hack & hack);
 	bool IsRunning();
 	bool Update();
@@ -67,9 +67,8 @@ private:
 	bool bSearching = false;
 	std::vector<std::reference_wrapper<Hack>> Options; //All options
 	std::vector<std::reference_wrapper<Hack>> pGVHacks; //All val freeze opts
-	
+
 	//key press related
 	std::chrono::steady_clock::time_point keyTimer = std::chrono::steady_clock::now();
 	float keyDelay = 0.2f; // = seconds
 };
-

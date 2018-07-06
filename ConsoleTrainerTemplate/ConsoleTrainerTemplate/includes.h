@@ -9,4 +9,3 @@
 #include <thread>
 
 #include "Hack.h"
-

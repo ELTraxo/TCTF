@@ -1,6 +1,5 @@
 #pragma once
 
-
 enum ValType
 {
 	I, I64, F, D
@@ -23,7 +22,7 @@ public:
 		pOffsets = new UINT[ofCount];
 
 		for (SIZE_T x = 0; x < ofCount; x++)
-			pOffsets[x] = vOffsets[x];		
+			pOffsets[x] = vOffsets[x];
 	}
 
 	uintptr_t pBase;
@@ -48,9 +47,9 @@ public:
 	bool CheckProcDeath();
 	bool GetProcDeathVar();
 	void ParseAddress(uintptr_t pAddress, byte * pByteArr);
-	
+
 	uintptr_t EvaluatePointer(uintptr_t pBase, UINT * offsets, UCHAR count);
-	
+
 	class Read
 	{
 	public:
@@ -73,10 +72,10 @@ public:
 		bool WriteFloat(uintptr_t pAddress, float & pWriteBuff);
 		bool WriteDouble(uintptr_t pAddress, double & pWriteBuff);
 		bool WriteBytes(uintptr_t pAddress, byte * pByteArray, SIZE_T szSize);
-	private: 
+	private:
 		Memory & mem;
 	}write;
-	
+
 	class Pat
 	{
 	public:
@@ -91,7 +90,7 @@ public:
 	private:
 		Memory & mem;
 	}pattern;
-	
+
 	uintptr_t ScanForCodeCave(uintptr_t pStart, size_t szSize);
 
 private:

@@ -2,23 +2,16 @@
 
 void Trainer::FreezeThread(Memory & mem, std::vector<std::reference_wrapper<Hack>> * GHackVec)
 {
-	static auto tpDelay = std::chrono::steady_clock::now();
-	auto tpNow = std::chrono::steady_clock::now();
-
 	while (!mem.GetProcDeathVar())
 	{
-		tpNow = std::chrono::steady_clock::now();
-		std::chrono::duration<float> check = tpNow - tpDelay;
-		if (check.count() >= 0.01f)
+		if (!GHackVec->empty())
 		{
-			if (!GHackVec->empty())
+			for each(Hack hack in *GHackVec)
 			{
-				for each(Hack hack in *GHackVec)
-				{
-					hack.WriteValue();
-				}
+				hack.WriteValue();
 			}
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }
 
@@ -49,7 +42,7 @@ Trainer::~Trainer()
 
 void Trainer::Init()
 {
-//	KeyTimer = clock();
+	//	KeyTimer = clock();
 	mem.Init(GameName);
 	bInitted = true;
 	bSearching = false;
@@ -100,9 +93,9 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, UINT pAddress, UINT szSize)
 }
 
 Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pattern & pPattern, UINT szSize)
-{	
+{
 	char * cpPattern = new char[pPattern.vPattern.size()];
-	
+
 	for (UINT i = 0; i < pPattern.vPattern.size(); i++)
 		cpPattern[i] = pPattern.vPattern[i];
 
@@ -128,10 +121,10 @@ Hack Trainer::Make::MakePatchHack(TCHAR * HackName, Pattern & pPattern, int iPat
 Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, UINT pAddress, UINT szSize, std::vector<byte> vData)
 {
 	byte * pData = new byte[vData.size()];
-	
+
 	for (UINT x = 0; x < vData.size(); x++)
 		pData[x] = vData[x];
-	
+
 	Hack hack = Hack(HackName, mem, HackType::HOOK, pAddress, szSize, pData, (UINT)vData.size());
 
 	delete[] pData;
@@ -150,7 +143,7 @@ Hack Trainer::Make::MakeInjectionHack(TCHAR * HackName, Pattern & pPattern, UINT
 		cpPattern[i] = pPattern.vPattern[i];
 
 	Hack retHack = Hack(HackName, mem, HackType::HOOK, mem.pattern.ScanProcess(cpPattern, (char*)pPattern.sMask.c_str(), false), szSize, pData, vData.size());
-	
+
 	delete[] pData;
 	delete[] cpPattern;
 
@@ -270,7 +263,7 @@ bool Trainer::Update()
 {
 	using namespace std::chrono;
 	steady_clock::time_point check = steady_clock::now();
-	
+
 	//duration<int, milliseconds> timeSince = steady_clock::now() - keyTimer;
 	duration<float> runtime = check - keyTimer;
 	for each(Hack & hack in Options)
@@ -306,5 +299,3 @@ std::vector<std::reference_wrapper<Hack>> & Trainer::GetOptions()
 {
 	return Options;
 }
-
-
