@@ -12,7 +12,7 @@ Menu::Menu(Trainer & tn, std::string sHeader)
 	:
 	tn(tn)
 {
-	this->sHeader = sHeader;	
+	this->sHeader = sHeader;
 	this->bHasHeader = true;
 }
 
@@ -27,8 +27,7 @@ void Menu::Init()
 
 void Menu::ClearScreen()
 {
-	for(int x = 0; x < 100; x++)
-		printf("\n");
+	system("cls");
 }
 
 void Menu::AddHeader(std::string sHeader)
@@ -45,7 +44,7 @@ void Menu::GetTrainerOpts()
 void Menu::PrintFooter()
 {
 	int iLines = 24;
-	if (bHasHeader ) --iLines;
+	if (bHasHeader) --iLines;
 	if (tn.IsReady()) { iLines -= TrainerOpts.size(); }
 	for (int x = 0; x < iLines; x++)
 		printf("\n");
@@ -150,7 +149,7 @@ void Menu::Update()
 		GetTrainerOpts();
 		std::cout << " " << (tn.IsRunning() ? green : red) << sHeader << white << std::endl;
 		for each (Hack hack in TrainerOpts)
-		{			
+		{
 			size_t len = lstrlenW(hack.GetName()) + 1;
 			char * hackName = new char[len];
 			size_t numOfCharConverted;

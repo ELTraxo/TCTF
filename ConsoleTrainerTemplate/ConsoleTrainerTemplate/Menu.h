@@ -21,4 +21,3 @@ private:
 	std::string sHeader;
 	std::vector<std::reference_wrapper<Hack>> TrainerOpts;
 };
-

@@ -107,7 +107,7 @@ void Hack::InitHackAndAddress(TCHAR * HackName, HackType ht, ValType vt, uintptr
 	this->ht = ht;
 	this->vt = vt;
 	this->pAddress = pAddress;
-	if(ht == HackType::VALFREEZE || ht == HackType::VALWRITE)
+	if (ht == HackType::VALFREEZE || ht == HackType::VALWRITE)
 		AddHackToVec();
 }
 
@@ -127,7 +127,7 @@ void Hack::ReInit()
 {
 	if (!vOldBytes.empty())
 		vOldBytes.clear();
-	
+
 	if (pCaveAddress != NULL)
 		pCaveAddress = NULL;
 
@@ -290,7 +290,7 @@ void Hack::WriteCaveData()
 	byte dstJmpBack[5] = { 0 };
 	for (int x = 0; x < 5; x++)
 		dstJmpBack[x] = destJumpBack[x];
-	
+
 	mem.write.WriteBytes(pCaveAddress + vCaveData.size(), dstJmpBack, 5);
 	pAddy = NULL;
 }

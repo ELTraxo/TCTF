@@ -9,8 +9,6 @@ enum HackType
 	HOOK
 };
 
-
-
 class Hack
 {
 public: //ctors
@@ -25,7 +23,7 @@ public: //ctors
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, int64_t value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, float value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pAddress, double value);
-	
+
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, int64_t value);
 	Hack(TCHAR * HackName, Memory & mem, std::vector<std::reference_wrapper<Hack>> & pGVHacks, HackType ht, ValType vt, uintptr_t pBase, UINT * Offsets, UCHAR count, float value);
@@ -38,7 +36,7 @@ public: //Inits, this is where hacks are added to the global freeze vec.
 	void ReInit();
 
 public: //Getters
-	TCHAR* GetName();
+	TCHAR * GetName();
 	HackType GetHackType();
 	bool GetStatus();
 
@@ -56,7 +54,7 @@ public: //Getters
 	void Toggle();
 
 	void AddHackToVec();
-	
+
 private:
 	Memory & mem;
 	HackType ht;
@@ -77,13 +75,12 @@ private:
 	//for pointer based hacks.
 	uintptr_t pBase = NULL;
 	UCHAR ucOffsetCount = NULL; //amount of offsets
-	UINT * pOffsets = nullptr; //ptr -> offsets	
+	UINT * pOffsets = nullptr; //ptr -> offsets
 
 	int iValue = 0;
 	int64_t i64Value = 0;
 	float fValue = 0;
 	double dValue = 0;
 
-	std::vector<std::reference_wrapper<Hack>> & pGVHacks;	
+	std::vector<std::reference_wrapper<Hack>> & pGVHacks;
 };
-

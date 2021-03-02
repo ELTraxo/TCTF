@@ -167,7 +167,6 @@ void Memory::ParseAddress(uintptr_t pAddress, byte * pBytesArr)
 	}
 	byte pAddyBytes[sizeof(uintptr_t)];
 
-	
 	hex2bin(sAddy.c_str(), (char*)pAddyBytes);
 	//pBytesArr = new byte[4];
 	memcpy(pBytesArr, pAddyBytes, sizeof(uintptr_t));
@@ -258,7 +257,7 @@ bool Memory::Read::ReadBytes(uintptr_t pAddress, byte * pReadBuff, SIZE_T szSize
 Memory::Write::Write(Memory & mem)
 	:
 	mem(mem)
-{	
+{
 }
 
 bool Memory::Write::WriteInt(uintptr_t pAddress, int & pWriteBuff)
@@ -271,7 +270,7 @@ bool Memory::Write::WriteInt(uintptr_t pAddress, int & pWriteBuff)
 		return false;
 	}
 }
-	
+
 bool Memory::Write::WriteInt64(uintptr_t pAddress, int64_t & pWriteBuff)
 {
 	if (WriteProcessMemory(mem.hProcess, (void*)pAddress, &pWriteBuff, sizeof(int64_t), nullptr))
@@ -351,7 +350,7 @@ bool Memory::Pat::CheckPattern(char * bArray, const char * pattern, const char *
 		bool bFound = true;
 		for (uintptr_t y = 0; y < pLen; y++)
 		{
-			if (!bCodeCave) 
+			if (!bCodeCave)
 			{
 				if (mask[y] != '?' && pattern[y] != bArray[x + y])
 				{
@@ -405,7 +404,7 @@ uintptr_t Memory::Pat::Scan(uintptr_t uiBegin, uintptr_t uiEnd, const char * pat
 				break;
 			}
 		}
-		uiBegin += mbi.RegionSize;		
+		uiBegin += mbi.RegionSize;
 	}
 	delete[] bArray;
 	if (!bFound) return uintptr_t(0);
@@ -521,4 +520,3 @@ uintptr_t Memory::ScanForCodeCave(uintptr_t pStart, size_t szSize)
 
 	return pCodeCave;
 }
-
